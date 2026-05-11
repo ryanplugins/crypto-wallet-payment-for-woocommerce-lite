@@ -1,0 +1,449 @@
+/* ─── Crypto Wallet Payment Lite — Checkout Styles ─────────────────────────── */
+
+/* ── Wrapper ──────────────────────────────────────────────────────────────── */
+.cwwlite-checkout-wrap {
+    font-family: inherit;
+    padding: 4px 0 8px;
+}
+
+.cwwlite-description {
+    margin: 0 0 14px;
+    color: #555;
+    font-size: 13.5px;
+    line-height: 1.5;
+}
+
+.cwwlite-no-networks {
+    color: #c0392b;
+    padding: 10px 12px;
+    background: #fef0f0;
+    border-radius: 6px;
+    font-size: 13px;
+}
+
+/* ── Section label ────────────────────────────────────────────────────────── */
+.cwwlite-select-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1d2327;
+    margin: 0 0 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+
+/* ── Pill selector ────────────────────────────────────────────────────────── */
+.cwwlite-pill-selector {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0 0 16px;
+}
+
+.cwwlite-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 7px 14px 7px 10px;
+    border: 1.5px solid #dde1e7;
+    border-radius: 999px;
+    background: #fff;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    color: #3c434a;
+    transition: border-color 0.15s, background 0.15s, color 0.15s, box-shadow 0.15s;
+    line-height: 1;
+    white-space: nowrap;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.cwwlite-pill:hover {
+    border-color: #2271b1;
+    color: #2271b1;
+    background: #f0f6ff;
+}
+
+.cwwlite-pill-active {
+    border-color: #2271b1;
+    background: #f0f6ff;
+    color: #2271b1;
+    font-weight: 600;
+    box-shadow: 0 0 0 2px rgba(34, 113, 177, 0.15);
+}
+
+.cwwlite-pill-icon {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    object-fit: contain;
+    display: block;
+    flex-shrink: 0;
+}
+
+.cwwlite-pill-label {
+    line-height: 1;
+}
+
+/* ── Rate countdown bar ───────────────────────────────────────────────────── */
+.cwwlite-rate-bar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: #fdfaf0;
+    border: 1px solid #f0d58c;
+    border-radius: 8px;
+    padding: 9px 14px;
+    font-size: 13px;
+    color: #6b5a00;
+    margin: 0 0 16px;
+    font-weight: 500;
+}
+
+.cwwlite-rate-bar-icon {
+    font-size: 15px;
+    flex-shrink: 0;
+}
+
+.cwwlite-countdown-highlight {
+    font-weight: 700;
+    font-size: 14px;
+    color: #c0392b;
+    min-width: 38px;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.5px;
+}
+
+/* ── Network panel ────────────────────────────────────────────────────────── */
+.cwwlite-network-panel {
+    animation: cwwlite-fadein 0.18s ease;
+}
+
+@keyframes cwwlite-fadein {
+    from { opacity: 0; transform: translateY(4px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── How would you like to pay ────────────────────────────────────────────── */
+.cwwlite-pay-method-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1d2327;
+    margin: 0 0 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+
+.cwwlite-method-cards {
+    display: flex;
+    gap: 10px;
+    margin: 0 0 16px;
+    flex-wrap: wrap;
+}
+
+.cwwlite-method-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 14px 22px;
+    border: 1.5px solid #dde1e7;
+    border-radius: 10px;
+    background: #fff;
+    cursor: default;
+    min-width: 140px;
+    text-align: center;
+    transition: border-color 0.15s, background 0.15s;
+}
+
+.cwwlite-method-card-active {
+    border-color: #2271b1;
+    background: #f0f6ff;
+    box-shadow: 0 0 0 2px rgba(34, 113, 177, 0.12);
+}
+
+.cwwlite-method-icon {
+    font-size: 22px;
+    line-height: 1;
+    margin-bottom: 2px;
+    display: block;
+}
+
+.cwwlite-method-card strong {
+    font-size: 13px;
+    font-weight: 700;
+    color: #1d2327;
+    display: block;
+}
+
+.cwwlite-method-sub {
+    font-size: 11.5px;
+    color: #787c82;
+    display: block;
+    margin-top: 1px;
+}
+
+/* ── Address box ──────────────────────────────────────────────────────────── */
+.cwwlite-address-box {
+    background: #f8f9fa;
+    border: 1px solid #e2e4e7;
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin: 0 0 14px;
+}
+
+.cwwlite-address-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.cwwlite-address-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #787c82;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+
+.cwwlite-amount-badge {
+    display: inline-block;
+    background: #e8f4e8;
+    color: #0a7227;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 999px;
+    letter-spacing: 0.2px;
+}
+
+.cwwlite-address-display {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #fff;
+    border: 1px solid #dde1e7;
+    border-radius: 6px;
+    padding: 8px 10px;
+    flex-wrap: wrap;
+}
+
+.cwwlite-wallet-address {
+    flex: 1;
+    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+    font-size: 12px;
+    color: #1d2327;
+    word-break: break-all;
+    line-height: 1.5;
+    background: none;
+    border: none;
+    padding: 0;
+    user-select: all;
+}
+
+.cwwlite-copy-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: #fff;
+    border: 1.5px solid #dde1e7;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+    color: #2271b1;
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: background 0.12s, border-color 0.12s, color 0.12s;
+    line-height: 1;
+}
+
+.cwwlite-copy-btn:hover {
+    background: #f0f6ff;
+    border-color: #2271b1;
+}
+
+.cwwlite-copy-btn.cwwlite-copied {
+    border-color: #00a32a;
+    color: #00a32a;
+    background: #f0fff4;
+}
+
+.cwwlite-copy-btn svg {
+    width: 13px;
+    height: 13px;
+    flex-shrink: 0;
+}
+
+.cwwlite-rate-note {
+    font-size: 11.5px;
+    color: #9ca3a7;
+    margin: 8px 0 0;
+    line-height: 1.4;
+}
+
+/* ── TX ID field ──────────────────────────────────────────────────────────── */
+.cwwlite-txid-wrap {
+    margin: 0 0 4px;
+}
+
+.cwwlite-txid-label {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #1d2327;
+    margin-bottom: 6px;
+}
+
+.cwwlite-optional {
+    font-size: 11.5px;
+    font-weight: 400;
+    color: #787c82;
+}
+
+.cwwlite-txid-input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 9px 12px;
+    border: 1.5px solid #dde1e7;
+    border-radius: 7px;
+    font-size: 13px;
+    color: #1d2327;
+    background: #fff;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    font-family: inherit;
+    line-height: 1.4;
+}
+
+.cwwlite-txid-input:focus {
+    border-color: #2271b1;
+    box-shadow: 0 0 0 2px rgba(34, 113, 177, 0.15);
+    outline: none;
+}
+
+.cwwlite-txid-input::placeholder {
+    color: #b4b9be;
+    font-size: 12.5px;
+}
+
+/* ── Thank You page ───────────────────────────────────────────────────────── */
+.cwwlite-thankyou {
+    background: #fff;
+    border: 1px solid #e2e4e7;
+    border-radius: 10px;
+    padding: 22px 24px;
+    margin: 24px 0;
+}
+
+.cwwlite-thankyou h3 {
+    margin: 0 0 14px;
+    font-size: 17px;
+    font-weight: 700;
+    color: #1d2327;
+}
+
+.cwwlite-payment-summary {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0;
+    font-size: 14px;
+}
+
+.cwwlite-payment-summary th,
+.cwwlite-payment-summary td {
+    padding: 9px 12px;
+    border-bottom: 1px solid #f0f0f1;
+    text-align: left;
+}
+
+.cwwlite-payment-summary th {
+    width: 140px;
+    color: #787c82;
+    font-weight: 600;
+    font-size: 12.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.cwwlite-awaiting-notice {
+    background: #f0f6ff;
+    border-left: 3px solid #2271b1;
+    padding: 10px 14px;
+    border-radius: 4px;
+    font-size: 13px;
+    margin: 14px 0 0;
+    color: #1d2327;
+    line-height: 1.5;
+}
+
+/* ── My Account order details ─────────────────────────────────────────────── */
+.cwwlite-txid-update {
+    background: #fff;
+    border: 1px solid #e2e4e7;
+    border-radius: 10px;
+    padding: 20px 22px;
+    margin: 18px 0;
+}
+
+.cwwlite-txid-update h2 {
+    margin: 0 0 10px;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.cwwlite-retry-section {
+    background: #fdfaf0;
+    border: 1px solid #f0d58c;
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin: 14px 0;
+}
+
+.cwwlite-retry-notice {
+    font-size: 13px;
+    color: #6b5a00;
+    margin: 0 0 10px;
+}
+
+.cwwlite-retry-btn {
+    margin-top: 4px;
+}
+
+.cwwlite-verified-notice,
+.cwwlite-pending-notice {
+    margin-bottom: 14px;
+    border-radius: 6px;
+}
+
+/* ── Responsive ───────────────────────────────────────────────────────────── */
+@media ( max-width: 480px ) {
+    .cwwlite-pill {
+        padding: 6px 11px 6px 8px;
+        font-size: 12px;
+    }
+
+    .cwwlite-pill-icon {
+        width: 16px;
+        height: 16px;
+    }
+
+    .cwwlite-method-card {
+        min-width: 100%;
+    }
+
+    .cwwlite-address-display {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .cwwlite-copy-btn {
+        align-self: flex-end;
+    }
+}
