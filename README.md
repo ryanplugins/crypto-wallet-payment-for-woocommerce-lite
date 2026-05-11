@@ -30,7 +30,7 @@ Accepts **Bitcoin (BTC), Ethereum (ETH), Solana (SOL), and XRP** with manual TX 
 
 ## ⚡ Pro Version — Additional Features
 
-Upgrade to [RyanPlugins Crypto Wallet Pro](https://ryanplugins.net) for:
+Upgrade to [RyanPlugins Crypto Wallet Pro](https://www.patreon.com/posts/crypto-wallet-157796120?source=lite) for:
 
 - **Auto blockchain verification** — BTC, ETH, SOL, XRP, ADA, BNB, MATIC (Polygon), ARB (Arbitrum), OP (Optimism) verified on-chain via API
 - **Browser wallet auto-send** — MetaMask, Phantom, Solflare, Eternl, Lace, Vespr (one-click send, no TX paste needed)
@@ -108,4 +108,4 @@ wc-ryanplugins-crypto-wallet-lite/
 ---
 
 **License:** GPL-2.0+  
-**Author:** RyanPlugins — https://ryanplugins.net
+**Author:** RyanPlugins — https://www.patreon.com/posts/crypto-wallet-157796120?source=lite
