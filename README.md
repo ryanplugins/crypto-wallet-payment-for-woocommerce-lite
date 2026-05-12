@@ -11,9 +11,18 @@
 
 Accept **Bitcoin (BTC), Ethereum (ETH), USDT, Solana (SOL), XRP, Cardano (ADA)**, and other crypto payments without third-party processors, APIs, custodial services, or KYC requirements.
 
-This decentralized WooCommerce crypto payment plugin supports **MetaMask, Trust Wallet, Coinbase Wallet, WalletConnect**, and other Web3 wallets for seamless blockchain payments — with zero setup complexity and no API keys needed.
+This WooCommerce crypto payment plugin supports **manual transfers from any wallet** including MetaMask, Trust Wallet, Coinbase Wallet, and other Web3 wallets — customers copy your address and send. Browser wallet auto-send (one-click) is available in the Pro version.
 
 > 🔗 **[Get Pro Version on Patreon →](https://www.patreon.com/posts/crypto-wallet-157796120?source=lite)**
+
+## External Services
+
+This plugin connects to the **[CoinGecko API](https://api.coingecko.com)** to retrieve live cryptocurrency exchange rates. This is a server-side request, cached for 5 minutes per currency. No user personal data is transmitted — only the store's base currency code is sent as a URL parameter (e.g. `?vs_currencies=usd`).
+
+- **CoinGecko Terms of Service:** https://www.coingecko.com/en/terms
+- **CoinGecko Privacy Policy:** https://www.coingecko.com/en/privacy
+
+No other external services are contacted. All JavaScript and CSS assets are loaded locally from within the plugin.
 
 ---
 

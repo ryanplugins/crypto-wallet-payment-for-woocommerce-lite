@@ -2,12 +2,14 @@
 /**
  * Plugin Name: Crypto Wallet Payment for WooCommerce — Lite
  * Plugin URI:  https://www.patreon.com/posts/crypto-wallet-157796120?source=lite
- * Description: Accept BTC, ETH, SOL and XRP payments in WooCommerce. Manual TX verification, live exchange rates, browser wallet support (MetaMask, Phantom, Solflare). Lite version — no auto-verification, no stablecoins, no refund workflow.
+ * Description: Accept BTC, ETH, SOL and XRP payments in WooCommerce. Manual TX verification, live exchange rates via CoinGecko. Lite version — no auto-verification, no stablecoins, no browser wallet auto-send.
  * Version:     1.0.0
  * Author:      RyanPlugins
  * Author URI:  https://www.patreon.com/posts/crypto-wallet-157796120?source=lite
  * License:     GPL-2.0+
+ * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain: ryanplugins-cwwlite
+ * Domain Path: /languages
  * Requires at least: 5.8
  * Requires PHP: 7.4
  * WC requires at least: 6.0
