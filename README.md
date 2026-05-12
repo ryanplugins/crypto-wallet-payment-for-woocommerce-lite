@@ -222,15 +222,6 @@ wc-ryanplugins-crypto-wallet-lite/
 
 ---
 
-## Recommended Release Filenames
-
-For maximum SEO discoverability when distributing this plugin:
-
-- `woocommerce-crypto-wallet-payment-gateway-lite.zip`
-- `wordpress-walletconnect-payment-plugin.zip`
-- `woocommerce-web3-payment-gateway.zip`
-
----
 
 ## Screenshots
 
