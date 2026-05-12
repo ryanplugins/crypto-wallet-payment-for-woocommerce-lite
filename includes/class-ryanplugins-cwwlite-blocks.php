@@ -55,7 +55,7 @@ class RyanPlugins_CWWLITE_Blocks extends AbstractPaymentMethodType {
         }
 
         return [
-            'title'              => $this->settings['title']              ?? __( 'Pay with Crypto (Lite)', 'wc-ryanplugins-crypto-wallet-lite' ),
+            'title'              => $this->settings['title']              ?? __( 'Pay with Crypto (Lite)', 'crypto-wallet-payment-for-woocommerce-lite' ),
             'description'        => $this->settings['description']        ?? '',
             'exchange_rate_note' => $this->settings['exchange_rate_note'] ?? '',
             'networks'           => $networks,
