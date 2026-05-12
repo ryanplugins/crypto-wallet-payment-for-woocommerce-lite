@@ -9,7 +9,6 @@
  * so that existing order records remain complete after uninstall.
  */
 
-// Only run when WordPress initiated the uninstall.
 if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
     exit;
 }
@@ -18,15 +17,10 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 delete_option( 'woocommerce_ryanplugins_cwwlite_crypto_settings' );
 
 // ── 2. Delete cached exchange rates ───────────────────────────────────────
-$currencies = [ 'usd', 'eur', 'gbp', 'php', 'jpy', 'aud', 'cad', 'sgd', 'inr', 'brl' ];
-foreach ( $currencies as $cur ) {
-    delete_transient( 'ryanplugins_cwwlite_live_rates_' . $cur );
+$ryanplugins_cwwlite_uninstall_currencies = array( 'usd', 'eur', 'gbp', 'php', 'jpy', 'aud', 'cad', 'sgd', 'inr', 'brl' );
+foreach ( $ryanplugins_cwwlite_uninstall_currencies as $ryanplugins_cwwlite_uninstall_currency ) {
+    delete_transient( 'ryanplugins_cwwlite_live_rates_' . $ryanplugins_cwwlite_uninstall_currency );
 }
 
 // ── 3. Delete per-user upgrade notice dismissal meta ─────────────────────
-global $wpdb;
-$wpdb->delete(
-    $wpdb->usermeta,
-    [ 'meta_key' => 'cwwlite_upgrade_notice_dismissed' ],
-    [ '%s' ]
-);
+delete_metadata( 'user', 0, 'cwwlite_upgrade_notice_dismissed', '', true );

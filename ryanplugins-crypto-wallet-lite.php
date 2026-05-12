@@ -8,7 +8,7 @@
  * Author URI:  https://www.patreon.com/posts/crypto-wallet-157796120?source=lite
  * License:     GPL-2.0+
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain: ryanplugins-cwwlite
+ * Text Domain: wc-ryanplugins-crypto-wallet-lite
  * Domain Path: /languages
  * Requires at least: 5.8
  * Requires PHP: 7.4
