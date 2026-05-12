@@ -225,15 +225,35 @@ For maximum SEO discoverability when distributing this plugin:
 
 ## Screenshots
 
-| Filename | Description |
-|---|---|
-| `woocommerce-crypto-checkout.png` | Pill-style network selector at WooCommerce checkout |
-| `walletconnect-payment.png` | WalletConnect payment flow (Pro) |
-| `metamask-woocommerce-payment.png` | MetaMask one-click payment (Pro) |
+### 1. Classic Checkout — Pill Network Selector & Address Box
+![WooCommerce Crypto Checkout - Pill network selector with Bitcoin, Ethereum, Solana, XRP options and address copy box](https://raw.githubusercontent.com/ryanplugins/wc-ryanplugins-crypto-wallet-lite/main/screenshots/woocommerce-crypto-checkout.png)
+
+*Pill-style network selector with live crypto amounts, wallet address copy button, and TX ID submission — Classic Checkout.*
 
 ---
 
-**License:** GPL-2.0+  
-**Author:** RyanPlugins — [Get Pro on Patreon](https://www.patreon.com/posts/crypto-wallet-157796120?source=lite)
+### 2. Block Checkout — Full Gutenberg Layout
+![WooCommerce Block Checkout Crypto Payment - Network pills, rate timer, manual transfer card](https://raw.githubusercontent.com/ryanplugins/wc-ryanplugins-crypto-wallet-lite/main/screenshots/woocommerce-block-checkout.png)
 
-> **Keywords:** woocommerce crypto payment, bitcoin woocommerce, ethereum payment gateway wordpress, walletconnect woocommerce, web3 payment gateway, non-custodial crypto payments, metamask woocommerce, solana woocommerce, accept crypto payments wordpress, decentralized payment gateway woocommerce
+*Identical UI in the WooCommerce Block (Gutenberg) Checkout — same pill selector, rate countdown, address box, and TX ID field.*
+
+---
+
+### 3. Settings Page — Tabbed Admin Interface
+![WooCommerce Crypto Payment Gateway Settings - Tabbed settings with General, Networks and Wallets, Upgrade to Pro tabs](https://raw.githubusercontent.com/ryanplugins/wc-ryanplugins-crypto-wallet-lite/main/screenshots/plugin-settings-page.png)
+
+*Tabbed settings page: General settings (title, description, rate lock) and Networks & Wallets (wallet addresses per coin).*
+
+---
+
+### 4. Admin Order Management — Crypto Meta Box & Orders Columns
+![WooCommerce Crypto Order Admin - Crypto Network and TX ID columns, manual verification meta box](https://raw.githubusercontent.com/ryanplugins/wc-ryanplugins-crypto-wallet-lite/main/screenshots/admin-order-meta-box.png)
+
+*Per-order meta box shows network, wallet, amount, TX ID with block explorer link, and one-click "Mark as Verified" button. Orders list shows Crypto Network and TX ID columns.*
+
+---
+
+### 5. Upgrade to Pro — Settings Tab
+![Crypto Wallet Payment Gateway Lite Upgrade to Pro - Dark gradient upgrade box with Pro features list](https://raw.githubusercontent.com/ryanplugins/wc-ryanplugins-crypto-wallet-lite/main/screenshots/upgrade-to-pro-settings.png)
+
+*Upgrade to Pro tab highlights auto-verification, MetaMask/Phantom/WalletConnect auto-send, stablecoin support, and more.*
