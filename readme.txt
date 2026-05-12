@@ -52,7 +52,7 @@ Get Pro: https://www.patreon.com/posts/crypto-wallet-157796120?source=lite
 
 == Installation ==
 
-1. Upload the `wc-ryanplugins-crypto-wallet-lite` folder to `/wp-content/plugins/`
+1. Upload the `crypto-wallet-payment-for-woocommerce-lite` folder to `/wp-content/plugins/`
 2. Activate the plugin via **Plugins → Installed Plugins**
 3. Go to **WooCommerce → Settings → Payments → Crypto Wallet Payment (Lite)**
 4. Enter your wallet address for each network you want to accept

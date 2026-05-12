@@ -1,17 +1,15 @@
-# WooCommerce Crypto Wallet Payment Gateway Lite
+# Crypto Wallet Payment for WooCommerce — Lite
 
-> **Accept Bitcoin, Ethereum, USDT, Solana, XRP, Cardano & Web3 Wallet Payments in WooCommerce**
+> **Accept Bitcoin, Ethereum, Solana & XRP payments in WooCommerce — no payment processor, no API keys, no KYC**
 
 ![WooCommerce](https://img.shields.io/badge/WooCommerce-Compatible-blue)
-![WalletConnect](https://img.shields.io/badge/WalletConnect-Supported-green)
-![Web3](https://img.shields.io/badge/Web3-Payments-orange)
 ![License](https://img.shields.io/badge/License-GPL--2.0%2B-lightgrey)
 
-**WooCommerce Crypto Wallet Payment Gateway Lite** allows merchants to accept cryptocurrency payments directly from customer wallets using WalletConnect and Web3 technology.
+**Crypto Wallet Payment for WooCommerce — Lite** lets merchants accept cryptocurrency payments directly to their own wallet — no third-party processor, no custodial service, and no KYC required.
 
-Accept **Bitcoin (BTC), Ethereum (ETH), USDT, Solana (SOL), XRP, Cardano (ADA)**, and other crypto payments without third-party processors, APIs, custodial services, or KYC requirements.
+Accept **Bitcoin (BTC), Ethereum (ETH), Solana (SOL), and XRP** payments. Customers select a network at checkout, copy your wallet address, send from their preferred wallet app, then paste their transaction hash. You manually verify and complete the order from the WooCommerce order admin.
 
-This WooCommerce crypto payment plugin supports **manual transfers from any wallet** including MetaMask, Trust Wallet, Coinbase Wallet, and other Web3 wallets — customers copy your address and send. Browser wallet auto-send (one-click) is available in the Pro version.
+Browser wallet auto-send (MetaMask, Phantom, WalletConnect), stablecoins (USDT/USDC), and Cardano are available in the Pro version.
 
 > 🔗 **[Get Pro Version on Patreon →](https://www.patreon.com/posts/crypto-wallet-157796120?source=lite)**
 
@@ -28,20 +26,12 @@ No other external services are contacted. All JavaScript and CSS assets are load
 
 ## Features
 
-- ✅ Accept Bitcoin, Ethereum, USDT, Solana, XRP, Cardano, and more
-- ✅ WalletConnect integration for Web3 wallets
-- ✅ MetaMask, Trust Wallet & Coinbase Wallet support
-- ✅ Non-custodial crypto payments — no third-party holds your funds
-- ✅ Direct wallet-to-wallet transfers
-- ✅ No API keys required
-- ✅ No KYC or third-party gateway
-- ✅ WooCommerce checkout integration (Classic & Block Checkout)
-- ✅ Real-time live exchange rates via CoinGecko (no API key)
+- ✅ Accept Bitcoin (BTC), Ethereum (ETH), Solana (SOL), and XRP
+- ✅ Non-custodial — payments go directly to your wallet
+- ✅ No API keys, no KYC, no third-party gateway required
+- ✅ WooCommerce Classic & Block Checkout support
+- ✅ Real-time live exchange rates via CoinGecko (free, no API key)
 - ✅ Rate lock countdown timer (configurable 0–60 min)
-- ✅ Multi-chain cryptocurrency payments
-- ✅ Web3 decentralized payment gateway
-- ✅ Lightweight and fast WooCommerce plugin
-- ✅ Secure blockchain payment processing
 - ✅ Manual TX ID submission at checkout or from My Account
 - ✅ One-click admin verification with order status auto-update
 - ✅ Block explorer links for every transaction
@@ -133,7 +123,7 @@ Upgrade to **[Crypto Wallet Payment Pro](https://www.patreon.com/posts/crypto-wa
 
 ## Installation
 
-1. Upload the `wc-ryanplugins-crypto-wallet-lite` folder to `/wp-content/plugins/`.
+1. Upload the `crypto-wallet-payment-for-woocommerce-lite` folder to `/wp-content/plugins/`.
 2. Activate via **Plugins → Installed Plugins**.
 3. Go to **WooCommerce → Settings → Payments → Crypto Wallet Payment (Lite)**.
 4. Enter your wallet addresses for each network you want to accept.
@@ -183,7 +173,7 @@ Yes. The plugin is fully compatible with WooCommerce High-Performance Order Stor
 ## File Structure
 
 ```
-wc-ryanplugins-crypto-wallet-lite/
+crypto-wallet-payment-for-woocommerce-lite/
 ├── ryanplugins-crypto-wallet-lite.php           ← Main plugin file
 ├── includes/
 │   ├── class-ryanplugins-cwwlite-gateway.php    ← Payment gateway
