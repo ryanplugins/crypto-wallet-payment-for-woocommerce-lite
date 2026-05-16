@@ -275,30 +275,51 @@ class RyanPlugins_CWWLITE_Admin {
         $pro_url = 'https://www.patreon.com/posts/crypto-wallet-157796120?source=lite';
         $nonce   = wp_create_nonce( 'cwwlite_dismiss_notice' );
         ?>
-        <div class="notice cwwlite-admin-notice is-dismissible" id="cwwlite-upgrade-notice">
-            <div class="notice-inner">
-                <div class="notice-icon">⚡</div>
-                <div class="notice-content">
-                    <p class="notice-title">
+        <div class="notice cwwlite-admin-notice is-dismissible" id="cwwlite-upgrade-notice"
+             style="background:linear-gradient(135deg,#1a1a2e 0%,#16213e 60%,#0f3460 100%);border:none;border-left:4px solid #f7971e;border-radius:0 6px 6px 0;padding:0;margin:5px 20px 20px 2px;box-shadow:0 2px 12px rgba(0,0,0,.18);overflow:hidden;position:relative;">
+            <div class="notice-inner"
+                 style="display:flex;align-items:center;gap:16px;padding:14px 48px 14px 18px;flex-wrap:wrap;box-sizing:border-box;">
+
+                <!-- Icon -->
+                <div class="notice-icon"
+                     style="display:flex;align-items:center;justify-content:center;width:42px;height:42px;min-width:42px;background:linear-gradient(135deg,#f7971e,#ffd200);border-radius:50%;font-size:20px;line-height:1;box-shadow:0 2px 8px rgba(255,210,0,.4);flex-shrink:0;">
+                    ⚡
+                </div>
+
+                <!-- Text -->
+                <div class="notice-content" style="flex:1;min-width:0;">
+                    <p class="notice-title"
+                       style="display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin:0 0 4px;padding:0;font-size:13.5px;font-weight:700;color:#fff;background:none;border:none;line-height:1.3;">
                         <?php esc_html_e( 'Crypto Wallet Payment (Lite) is active', 'crypto-wallet-payment-for-woocommerce-lite' ); ?>
-                        <span class="cwwlite-notice-badge"><?php esc_html_e( 'Upgrade Available', 'crypto-wallet-payment-for-woocommerce-lite' ); ?></span>
+                        <span class="cwwlite-notice-badge"
+                              style="display:inline-block;background:linear-gradient(135deg,#e65c00,#f9d423);color:#1a1a2e;font-size:9px;font-weight:800;padding:2px 7px;border-radius:20px;letter-spacing:.8px;text-transform:uppercase;vertical-align:middle;">
+                            <?php esc_html_e( 'Upgrade Available', 'crypto-wallet-payment-for-woocommerce-lite' ); ?>
+                        </span>
                     </p>
-                    <p class="notice-text">
+                    <p class="notice-text"
+                       style="color:#9daec0;font-size:12px;margin:0;line-height:1.6;">
                         <?php esc_html_e( 'You\'re on the free Lite plan — manual verification only.', 'crypto-wallet-payment-for-woocommerce-lite' ); ?>
-                        <?php echo wp_kses( __( 'Upgrade to <strong>Pro</strong> for auto blockchain verification, browser wallet auto-send (MetaMask, Phantom, Solflare), stablecoins (USDT / USDC), fraud detection, refund workflow and more.', 'crypto-wallet-payment-for-woocommerce-lite' ), [ 'strong' => [] ] ); ?>
+                        <?php echo wp_kses( __( ' Upgrade to <strong style="color:#c8d6e5;font-weight:600;">Pro</strong> for auto blockchain verification, browser wallet auto-send (MetaMask, Phantom, Solflare), stablecoins (USDT / USDC), fraud detection, refund workflow and more.', 'crypto-wallet-payment-for-woocommerce-lite' ), [ 'strong' => [ 'style' => true ] ] ); ?>
                     </p>
                 </div>
-                <div class="notice-actions">
-                    <a href="<?php echo esc_url( $pro_url ); ?>" target="_blank" rel="noopener" class="notice-cta">
+
+                <!-- Actions -->
+                <div class="notice-actions"
+                     style="display:flex;align-items:center;gap:12px;flex-shrink:0;flex-wrap:wrap;">
+                    <a href="<?php echo esc_url( $pro_url ); ?>" target="_blank" rel="noopener"
+                       class="notice-cta"
+                       style="display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,#f7971e 0%,#ffd200 100%);color:#1a1a2e;font-weight:700;font-size:12px;padding:8px 18px;border-radius:5px;text-decoration:none;box-shadow:0 2px 8px rgba(247,151,30,.45);white-space:nowrap;border:none;">
                         <?php esc_html_e( 'Get Pro →', 'crypto-wallet-payment-for-woocommerce-lite' ); ?>
                     </a>
                     <a href="#"
+                       id="cwwlite-dismiss-notice"
                        class="notice-dismiss-link"
                        data-nonce="<?php echo esc_attr( $nonce ); ?>"
-                       id="cwwlite-dismiss-notice">
+                       style="color:#7f8fa0;font-size:11px;text-decoration:none;white-space:nowrap;border:none;background:none;">
                         <?php esc_html_e( 'Dismiss for 7 days', 'crypto-wallet-payment-for-woocommerce-lite' ); ?>
                     </a>
                 </div>
+
             </div>
         </div>
         <?php
