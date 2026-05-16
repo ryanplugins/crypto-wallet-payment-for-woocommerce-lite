@@ -36,4 +36,159 @@
     background: #219a52 !important;
 }
 
+/* ── Admin Notice — Upgrade to Pro ───────────────────────────────────────────── */
+/*
+ * WP core sets .notice { background:#fff; border-left:4px solid #72aee6; padding:... }
+ * We must use !important on every property WP touches so our dark theme wins.
+ */
 
+#cwwlite-upgrade-notice.notice.cwwlite-admin-notice {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%) !important;
+    border: none !important;
+    border-left: 4px solid #f7971e !important;
+    border-radius: 0 6px 6px 0 !important;
+    padding: 0 !important;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.18) !important;
+    overflow: hidden;
+    margin: 5px 20px 20px 2px !important;
+    position: relative;
+}
+
+/* Flex row: icon | content | actions | [×] */
+#cwwlite-upgrade-notice .notice-inner {
+    display: flex !important;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 44px 14px 18px; /* right padding leaves room for WP's × button */
+    flex-wrap: wrap;
+    box-sizing: border-box;
+}
+
+/* ⚡ circle */
+#cwwlite-upgrade-notice .notice-icon {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    background: linear-gradient(135deg, #f7971e, #ffd200) !important;
+    border-radius: 50%;
+    font-size: 20px;
+    line-height: 1;
+    box-shadow: 0 2px 8px rgba(255,210,0,0.4);
+}
+
+/* Text column */
+#cwwlite-upgrade-notice .notice-content {
+    flex: 1 1 260px;
+    min-width: 0;
+}
+
+#cwwlite-upgrade-notice .notice-title {
+    display: flex !important;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0 0 4px !important;
+    padding: 0 !important;
+    font-size: 13.5px !important;
+    font-weight: 700 !important;
+    color: #fff !important;
+    background: none !important;
+    border: none !important;
+}
+
+#cwwlite-upgrade-notice .cwwlite-notice-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #e65c00, #f9d423) !important;
+    color: #1a1a2e !important;
+    font-size: 9px;
+    font-weight: 800;
+    padding: 2px 7px;
+    border-radius: 20px;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    vertical-align: middle;
+}
+
+#cwwlite-upgrade-notice .notice-text {
+    color: #9daec0 !important;
+    font-size: 12px !important;
+    margin: 0 !important;
+    line-height: 1.6;
+}
+
+#cwwlite-upgrade-notice .notice-text strong {
+    color: #c8d6e5 !important;
+    font-weight: 600;
+}
+
+/* CTA + dismiss row */
+#cwwlite-upgrade-notice .notice-actions {
+    display: flex !important;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+}
+
+#cwwlite-upgrade-notice .notice-cta {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 6px;
+    background: linear-gradient(135deg, #f7971e 0%, #ffd200 100%) !important;
+    color: #1a1a2e !important;
+    font-weight: 700;
+    font-size: 12px;
+    padding: 8px 18px;
+    border-radius: 5px;
+    text-decoration: none !important;
+    box-shadow: 0 2px 8px rgba(247,151,30,0.45);
+    transition: transform 0.15s, box-shadow 0.15s;
+    white-space: nowrap;
+    border: none !important;
+}
+
+#cwwlite-upgrade-notice .notice-cta:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(247,151,30,0.6) !important;
+    color: #1a1a2e !important;
+    background: linear-gradient(135deg, #f7971e 0%, #ffd200 100%) !important;
+}
+
+#cwwlite-upgrade-notice .notice-dismiss-link {
+    color: #7f8fa0 !important;
+    font-size: 11px;
+    text-decoration: none !important;
+    white-space: nowrap;
+    transition: color 0.15s;
+    border: none !important;
+    background: none !important;
+}
+
+#cwwlite-upgrade-notice .notice-dismiss-link:hover {
+    color: #c8d6e5 !important;
+    text-decoration: underline !important;
+}
+
+/* WP's native × dismiss button — vertically centred, gold on hover */
+#cwwlite-upgrade-notice .notice-dismiss {
+    position: absolute !important;
+    top: 50% !important;
+    right: 1px !important;
+    transform: translateY(-50%) !important;
+    padding: 9px !important;
+    background: none !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+#cwwlite-upgrade-notice .notice-dismiss::before {
+    color: #5a6a7a !important;
+    font-size: 16px !important;
+}
+
+#cwwlite-upgrade-notice .notice-dismiss:hover::before {
+    color: #ffd200 !important;
+}

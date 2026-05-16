@@ -28,6 +28,10 @@ class RyanPlugins_CWWLITE_Admin {
         // AJAX: mark verified
         add_action( 'wp_ajax_ryanplugins_cwwlite_verify_order', [ $this, 'ajax_verify_order' ] );
 
+        // Admin notice: Upgrade to Pro (7-day dismissal)
+        add_action( 'admin_notices',                              [ $this, 'upgrade_admin_notice' ] );
+        add_action( 'wp_ajax_ryanplugins_cwwlite_dismiss_notice', [ $this, 'ajax_dismiss_notice' ] );
+
 
     }
 
@@ -234,7 +238,8 @@ class RyanPlugins_CWWLITE_Admin {
             true
         );
         wp_localize_script( 'ryanplugins-cwwlite-admin', 'cwwliteAdmin', [
-            'ajaxUrl' => admin_url( 'admin-ajax.php' ),
+            'ajaxUrl'      => admin_url( 'admin-ajax.php' ),
+            'dismissNonce' => wp_create_nonce( 'cwwlite_dismiss_notice' ),
         ] );
     }
 
@@ -254,6 +259,61 @@ class RyanPlugins_CWWLITE_Admin {
         // phpcs:enable WordPress.Security.NonceVerification.Recommended
 
         return $is_wc_settings;
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // Upgrade to Pro — admin notice (re-appears after 7 days)
+    // ─────────────────────────────────────────────────────────────────────────
+
+    public function upgrade_admin_notice() {
+        if ( ! current_user_can( 'manage_woocommerce' ) ) return;
+        if ( ! is_admin() || wp_doing_ajax() ) return;
+
+        $dismissed_at = (int) get_user_meta( get_current_user_id(), 'cwwlite_upgrade_notice_dismissed_at', true );
+        if ( $dismissed_at && ( time() - $dismissed_at ) < 7 * DAY_IN_SECONDS ) return;
+
+        $pro_url = 'https://www.patreon.com/posts/crypto-wallet-157796120?source=lite';
+        $nonce   = wp_create_nonce( 'cwwlite_dismiss_notice' );
+        ?>
+        <div class="notice cwwlite-admin-notice is-dismissible" id="cwwlite-upgrade-notice">
+            <div class="notice-inner">
+                <div class="notice-icon">⚡</div>
+                <div class="notice-content">
+                    <p class="notice-title">
+                        <?php esc_html_e( 'Crypto Wallet Payment (Lite) is active', 'crypto-wallet-payment-for-woocommerce-lite' ); ?>
+                        <span class="cwwlite-notice-badge"><?php esc_html_e( 'Upgrade Available', 'crypto-wallet-payment-for-woocommerce-lite' ); ?></span>
+                    </p>
+                    <p class="notice-text">
+                        <?php esc_html_e( 'You\'re on the free Lite plan — manual verification only.', 'crypto-wallet-payment-for-woocommerce-lite' ); ?>
+                        <?php echo wp_kses( __( 'Upgrade to <strong>Pro</strong> for auto blockchain verification, browser wallet auto-send (MetaMask, Phantom, Solflare), stablecoins (USDT / USDC), fraud detection, refund workflow and more.', 'crypto-wallet-payment-for-woocommerce-lite' ), [ 'strong' => [] ] ); ?>
+                    </p>
+                </div>
+                <div class="notice-actions">
+                    <a href="<?php echo esc_url( $pro_url ); ?>" target="_blank" rel="noopener" class="notice-cta">
+                        <?php esc_html_e( 'Get Pro →', 'crypto-wallet-payment-for-woocommerce-lite' ); ?>
+                    </a>
+                    <a href="#"
+                       class="notice-dismiss-link"
+                       data-nonce="<?php echo esc_attr( $nonce ); ?>"
+                       id="cwwlite-dismiss-notice">
+                        <?php esc_html_e( 'Dismiss for 7 days', 'crypto-wallet-payment-for-woocommerce-lite' ); ?>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <?php
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // AJAX: record dismissal timestamp (notice returns after 7 days)
+    // ─────────────────────────────────────────────────────────────────────────
+
+    public function ajax_dismiss_notice() {
+        if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ?? '' ) ), 'cwwlite_dismiss_notice' ) ) {
+            wp_send_json_error( 'nonce' );
+        }
+        update_user_meta( get_current_user_id(), 'cwwlite_upgrade_notice_dismissed_at', time() );
+        wp_send_json_success();
     }
 
 }

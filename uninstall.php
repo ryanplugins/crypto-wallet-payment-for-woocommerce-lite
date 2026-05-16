@@ -22,3 +22,6 @@ foreach ( $ryanplugins_cwwlite_uninstall_currencies as $ryanplugins_cwwlite_unin
     delete_transient( 'ryanplugins_cwwlite_live_rates_' . $ryanplugins_cwwlite_uninstall_currency );
 }
 
+// ── 3. Delete per-user upgrade notice dismissal timestamp ─────────────────
+delete_metadata( 'user', 0, 'cwwlite_upgrade_notice_dismissed_at', '', true );
+
