@@ -200,11 +200,6 @@ class RyanPlugins_CWWLITE_Gateway extends WC_Payment_Gateway {
                 'custom_attributes' => [ 'min' => '0', 'max' => '60', 'step' => '1' ],
             ],
 
-            // ── Upgrade notice ────────────────────────────────────────────────
-            'upgrade_notice_section' => [
-                'title' => '',
-                'type'  => 'cwwlite_upgrade_box',
-            ],
         ];
     }
 
@@ -256,15 +251,6 @@ class RyanPlugins_CWWLITE_Gateway extends WC_Payment_Gateway {
                   <?php endif; ?>
               </button>
 
-              <button type="button"
-                      class="ryanplugins-cwwlite-nav-tab"
-                      data-tab="upgrade"
-                      role="tab" aria-selected="false"
-                      aria-controls="ryanplugins-cwwlite-panel-upgrade">
-                  <?php esc_html_e( '⚡ Upgrade to Pro', 'crypto-wallet-payment-for-woocommerce-lite' ); ?>
-                  <span class="ryanplugins-cwwlite-tab-badge ryanplugins-cwwlite-tab-badge-ok">PRO</span>
-              </button>
-
             </div><!-- .ryanplugins-cwwlite-nav-tabs -->
 
             <!-- ── Tab: General ──────────────────────────────────────────── -->
@@ -279,7 +265,7 @@ class RyanPlugins_CWWLITE_Gateway extends WC_Payment_Gateway {
                 <?php
                 $saved = $this->form_fields;
                 $this->form_fields = array_intersect_key( $saved, array_flip( [ 'enabled', 'title', 'description', 'instructions', 'exchange_rate_note', 'hold_message' ] ) );
-                ob_start(); $this->generate_settings_html(); echo wp_kses_post( ob_get_clean() ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                $this->generate_settings_html(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
                 $this->form_fields = $saved;
                 ?>
               </table>
@@ -291,7 +277,7 @@ class RyanPlugins_CWWLITE_Gateway extends WC_Payment_Gateway {
                 <?php
                 $saved = $this->form_fields;
                 $this->form_fields = array_intersect_key( $saved, array_flip( [ 'verified_status', 'rate_lock_minutes' ] ) );
-                ob_start(); $this->generate_settings_html(); echo wp_kses_post( ob_get_clean() ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                $this->generate_settings_html(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
                 $this->form_fields = $saved;
                 ?>
               </table>
@@ -313,27 +299,12 @@ class RyanPlugins_CWWLITE_Gateway extends WC_Payment_Gateway {
                 <?php
                 $saved = $this->form_fields;
                 $this->form_fields = array_intersect_key( $saved, array_flip( [ 'wallet_bitcoin', 'wallet_ethereum', 'wallet_solana', 'wallet_xrp' ] ) );
-                ob_start(); $this->generate_settings_html(); echo wp_kses_post( ob_get_clean() ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                $this->generate_settings_html(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
                 $this->form_fields = $saved;
                 ?>
               </table>
 
             </div><!-- #ryanplugins-cwwlite-panel-networks -->
-
-            <!-- ── Tab: Upgrade to Pro ───────────────────────────────────── -->
-            <div class="ryanplugins-cwwlite-tab-panel"
-                 id="ryanplugins-cwwlite-panel-upgrade"
-                 role="tabpanel" hidden>
-
-              <div class="ryanplugins-cwwlite-section-heading">
-                  <?php esc_html_e( 'UPGRADE TO PRO', 'crypto-wallet-payment-for-woocommerce-lite' ); ?>
-              </div>
-
-              <table class="form-table">
-                  <?php echo wp_kses_post( $this->generate_cwwlite_upgrade_box_html( 'upgrade_notice_section', [] ) ); ?>
-              </table>
-
-            </div><!-- #ryanplugins-cwwlite-panel-upgrade -->
 
             <!-- ── Save button — WC's outer form submits this ───────────── -->
             <p class="ryanplugins-cwwlite-submit" id="ryanplugins-cwwlite-save-btn-row">
@@ -345,48 +316,6 @@ class RyanPlugins_CWWLITE_Gateway extends WC_Payment_Gateway {
             </form>
         </div><!-- #ryanplugins-cwwlite-settings-wrap -->
         <?php
-    }
-
-    // ─────────────────────────────────────────────────────────────────────────
-    // Custom field: Upgrade to Pro box
-    // ─────────────────────────────────────────────────────────────────────────
-
-    public function generate_cwwlite_upgrade_box_html( $key, $data ): string {
-        $pro_url = 'https://www.patreon.com/posts/crypto-wallet-157796120?source=lite';
-        ob_start();
-        ?>
-        <tr valign="top">
-            <td colspan="2" style="padding:16px 0 8px;">
-                <div class="cwwlite-upgrade-box">
-                    <h3 class="cwwlite-upgrade-heading">
-                        <span class="cwwlite-bolt">⚡</span>
-                        <?php esc_html_e( 'Upgrade to Pro', 'crypto-wallet-payment-for-woocommerce-lite' ); ?>
-                        <span class="cwwlite-upgrade-badge"><?php esc_html_e( 'Pro', 'crypto-wallet-payment-for-woocommerce-lite' ); ?></span>
-                    </h3>
-                    <ul class="cwwlite-upgrade-features">
-                        <li><span class="cwwlite-feat-icon">✔</span> <?php esc_html_e( 'Auto blockchain verification (BTC, ETH, SOL, XRP)', 'crypto-wallet-payment-for-woocommerce-lite' ); ?></li>
-                        <li><span class="cwwlite-feat-icon">✔</span> <?php esc_html_e( 'EVM L2s: BNB, MATIC, ARB, OP', 'crypto-wallet-payment-for-woocommerce-lite' ); ?></li>
-                        <li><span class="cwwlite-feat-icon">✔</span> <?php esc_html_e( 'Stablecoin support (USDT / USDC)', 'crypto-wallet-payment-for-woocommerce-lite' ); ?></li>
-                        <li><span class="cwwlite-feat-icon">✔</span> <?php esc_html_e( 'Browser wallet auto-send (MetaMask, Phantom)', 'crypto-wallet-payment-for-woocommerce-lite' ); ?></li>
-                        <li><span class="cwwlite-feat-icon">✔</span> <?php esc_html_e( 'Solflare, Eternl, Lace, Vespr support', 'crypto-wallet-payment-for-woocommerce-lite' ); ?></li>
-                        <li><span class="cwwlite-feat-icon">✔</span> <?php esc_html_e( 'Fraud detection & security log', 'crypto-wallet-payment-for-woocommerce-lite' ); ?></li>
-                        <li><span class="cwwlite-feat-icon">✔</span> <?php esc_html_e( 'Refund workflow with email alerts', 'crypto-wallet-payment-for-woocommerce-lite' ); ?></li>
-                        <li><span class="cwwlite-feat-icon">✔</span> <?php esc_html_e( 'WP-Cron + webhook verification', 'crypto-wallet-payment-for-woocommerce-lite' ); ?></li>
-                        <li><span class="cwwlite-feat-icon">✔</span> <?php esc_html_e( 'Order expiry & amount tolerance', 'crypto-wallet-payment-for-woocommerce-lite' ); ?></li>
-                        <li><span class="cwwlite-feat-icon">✔</span> <?php esc_html_e( 'Cardano (ADA) + test mode', 'crypto-wallet-payment-for-woocommerce-lite' ); ?></li>
-                    </ul>
-                    <div class="cwwlite-upgrade-footer">
-                        <a href="<?php echo esc_url( $pro_url ); ?>" target="_blank" rel="noopener" class="cwwlite-upgrade-cta">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z"/><path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z"/></svg>
-                            <?php esc_html_e( 'Get Pro on Patreon →', 'crypto-wallet-payment-for-woocommerce-lite' ); ?>
-                        </a>
-                        <span class="cwwlite-upgrade-note"><?php esc_html_e( 'No extra hosting needed — activates on your existing site.', 'crypto-wallet-payment-for-woocommerce-lite' ); ?></span>
-                    </div>
-                </div>
-            </td>
-        </tr>
-        <?php
-        return ob_get_clean();
     }
 
 
