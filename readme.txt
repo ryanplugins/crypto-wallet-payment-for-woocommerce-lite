@@ -1,4 +1,4 @@
-=== Crypto Wallet Payment for WooCommerce — Lite ===
+=== Crypto Wallet Payment for WooCommerce ===
 Contributors: ryanplugins
 Tags: cryptocurrency, bitcoin, woocommerce, payment gateway, ethereum
 Requires at least: 5.8
@@ -12,7 +12,7 @@ Accept Bitcoin, Ethereum, Solana and XRP payments in WooCommerce with manual tra
 
 == Description ==
 
-**Crypto Wallet Payment for WooCommerce — Lite** lets your store accept cryptocurrency payments directly to your wallet — no third-party processor, no custodial service, no KYC, and no API keys required.
+**Crypto Wallet Payment for WooCommerce** lets your store accept cryptocurrency payments directly to your wallet — no third-party processor, no custodial service, no KYC, and no API keys required.
 
 Customers select a network (Bitcoin, Ethereum, Solana, or XRP) at checkout, copy your wallet address, send from their own crypto wallet, then optionally paste their transaction hash. You manually verify the payment and mark the order complete with one click from the order admin.
 
