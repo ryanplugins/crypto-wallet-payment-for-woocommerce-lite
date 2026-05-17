@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: Crypto Wallet Payment for WooCommerce — Lite
+ * Plugin Name: Crypto Wallet Payment for WooCommerce
  * Plugin URI:  https://ryanplugins.net
  * Description: Accept BTC, ETH, SOL and XRP payments in WooCommerce. Manual TX verification, live exchange rates via CoinGecko. Lite version — no auto-verification, no stablecoins, no browser wallet auto-send.
  * Version:     1.0.0
