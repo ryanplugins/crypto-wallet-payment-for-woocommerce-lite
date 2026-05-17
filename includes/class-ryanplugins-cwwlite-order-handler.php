@@ -161,8 +161,11 @@ $txid = sanitize_text_field( wp_unslash( $_POST['cwwlite_txid_value'] ?? '' ) );
         $network = $order->get_meta( '_cwwlite_network' );
         $amount  = $order->get_meta( '_cwwlite_crypto_amount' );
         $symbol  = $order->get_meta( '_cwwlite_symbol' );
-        $cfg     = RyanPlugins_CWWLITE_Gateway::$networks[ $network ] ?? [];
-        $explorer = $cfg['explorer'] ?? '';
+        $cfg         = RyanPlugins_CWWLITE_Gateway::$networks[ $network ] ?? [];
+        $environment = $order->get_meta( '_cwwlite_environment' ) ?: 'mainnet';
+        $explorer    = $environment === 'testnet'
+            ? ( $cfg['explorer_testnet'] ?? $cfg['explorer'] ?? '' )
+            : ( $cfg['explorer'] ?? '' );
 
         if ( $amount && $symbol ) {
             $total_rows['cwwlite_crypto_amount'] = [

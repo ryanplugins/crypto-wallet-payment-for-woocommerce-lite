@@ -23,44 +23,52 @@ class RyanPlugins_CWWLITE_Gateway extends WC_Payment_Gateway {
 
     public static array $networks = [
         'bitcoin' => [
-            'label'       => 'Bitcoin (BTC)',
-            'symbol'      => 'BTC',
-            'coingecko'   => 'bitcoin',
-            'icon'        => 'bitcoin',
-            'explorer'    => 'https://blockstream.info/tx/',
-            'addr_prefix' => [ '1', '3', 'bc1' ],
-            'addr_len'    => [ 25, 62 ],
-            'wallet_type' => 'manual',
+            'label'              => 'Bitcoin (BTC)',
+            'symbol'             => 'BTC',
+            'coingecko'          => 'bitcoin',
+            'icon'               => 'bitcoin',
+            'explorer'           => 'https://blockstream.info/tx/',
+            'explorer_testnet'   => 'https://blockstream.info/testnet/tx/',
+            'addr_prefix'        => [ '1', '3', 'bc1' ],
+            'addr_prefix_test'   => [ 'm', 'n', 'tb1' ],
+            'addr_len'           => [ 25, 62 ],
+            'wallet_type'        => 'manual',
         ],
         'ethereum' => [
-            'label'       => 'Ethereum (ETH)',
-            'symbol'      => 'ETH',
-            'coingecko'   => 'ethereum',
-            'icon'        => 'ethereum',
-            'explorer'    => 'https://etherscan.io/tx/',
-            'addr_prefix' => [ '0x' ],
-            'addr_len'    => [ 42, 42 ],
-            'wallet_type' => 'manual',
+            'label'              => 'Ethereum (ETH)',
+            'symbol'             => 'ETH',
+            'coingecko'          => 'ethereum',
+            'icon'               => 'ethereum',
+            'explorer'           => 'https://etherscan.io/tx/',
+            'explorer_testnet'   => 'https://sepolia.etherscan.io/tx/',
+            'addr_prefix'        => [ '0x' ],
+            'addr_prefix_test'   => [ '0x' ],
+            'addr_len'           => [ 42, 42 ],
+            'wallet_type'        => 'manual',
         ],
         'solana' => [
-            'label'       => 'Solana (SOL)',
-            'symbol'      => 'SOL',
-            'coingecko'   => 'solana',
-            'icon'        => 'solana',
-            'explorer'    => 'https://solscan.io/tx/',
-            'addr_prefix' => [],
-            'addr_len'    => [ 43, 44 ],
-            'wallet_type' => 'manual',
+            'label'              => 'Solana (SOL)',
+            'symbol'             => 'SOL',
+            'coingecko'          => 'solana',
+            'icon'               => 'solana',
+            'explorer'           => 'https://solscan.io/tx/',
+            'explorer_testnet'   => 'https://solscan.io/tx/{txid}?cluster=devnet',
+            'addr_prefix'        => [],
+            'addr_prefix_test'   => [],
+            'addr_len'           => [ 43, 44 ],
+            'wallet_type'        => 'manual',
         ],
         'xrp' => [
-            'label'       => 'XRP (Ripple)',
-            'symbol'      => 'XRP',
-            'coingecko'   => 'ripple',
-            'icon'        => 'xrp',
-            'explorer'    => 'https://xrpscan.com/tx/',
-            'addr_prefix' => [ 'r' ],
-            'addr_len'    => [ 25, 34 ],
-            'wallet_type' => 'manual',
+            'label'              => 'XRP (Ripple)',
+            'symbol'             => 'XRP',
+            'coingecko'          => 'ripple',
+            'icon'               => 'xrp',
+            'explorer'           => 'https://xrpscan.com/tx/',
+            'explorer_testnet'   => 'https://testnet.xrpscan.com/tx/',
+            'addr_prefix'        => [ 'r' ],
+            'addr_prefix_test'   => [ 'r' ],
+            'addr_len'           => [ 25, 34 ],
+            'wallet_type'        => 'manual',
         ],
     ];
 
@@ -112,6 +120,17 @@ class RyanPlugins_CWWLITE_Gateway extends WC_Payment_Gateway {
                 'type'    => 'checkbox',
                 'label'   => __( 'Enable Crypto Wallet Payment (Lite)', 'crypto-wallet-payment-for-woocommerce-lite' ),
                 'default' => 'yes',
+            ],
+            'environment' => [
+                'title'       => __( 'Environment', 'crypto-wallet-payment-for-woocommerce-lite' ),
+                'type'        => 'select',
+                'description' => __( 'Mainnet processes real transactions. Testnet is for development and testing only — no real funds are transferred.', 'crypto-wallet-payment-for-woocommerce-lite' ),
+                'default'     => 'mainnet',
+                'desc_tip'    => true,
+                'options'     => [
+                    'mainnet' => __( 'Mainnet (Live)', 'crypto-wallet-payment-for-woocommerce-lite' ),
+                    'testnet' => __( 'Testnet (Testing)', 'crypto-wallet-payment-for-woocommerce-lite' ),
+                ],
             ],
             'title' => [
                 'title'       => __( 'Payment Title', 'crypto-wallet-payment-for-woocommerce-lite' ),
@@ -214,6 +233,7 @@ class RyanPlugins_CWWLITE_Gateway extends WC_Payment_Gateway {
             if ( empty( $this->get_option( 'wallet_' . $key ) ) ) $missing_wallets++;
         }
         $all_missing = ( $missing_wallets === count( self::$networks ) );
+        $is_testnet  = $this->is_testnet();
         ?>
         <div id="ryanplugins-cwwlite-settings-wrap">
             <form method="post" id="mainform" action="" enctype="multipart/form-data">
@@ -232,6 +252,12 @@ class RyanPlugins_CWWLITE_Gateway extends WC_Payment_Gateway {
                       role="tab" aria-selected="true"
                       aria-controls="ryanplugins-cwwlite-panel-general">
                   <?php esc_html_e( '⚙ General', 'crypto-wallet-payment-for-woocommerce-lite' ); ?>
+                  <?php if ( $is_testnet ) : ?>
+                      <span class="ryanplugins-cwwlite-tab-badge ryanplugins-cwwlite-tab-badge-testnet"
+                            title="<?php esc_attr_e( 'Testnet mode active', 'crypto-wallet-payment-for-woocommerce-lite' ); ?>">
+                          TEST
+                      </span>
+                  <?php endif; ?>
               </button>
 
               <button type="button"
@@ -258,13 +284,21 @@ class RyanPlugins_CWWLITE_Gateway extends WC_Payment_Gateway {
                  id="ryanplugins-cwwlite-panel-general"
                  role="tabpanel">
 
+              <?php if ( $is_testnet ) : ?>
+              <div class="cwwlite-testnet-admin-banner">
+                  <span class="cwwlite-testnet-icon">🧪</span>
+                  <strong><?php esc_html_e( 'Testnet Mode Active', 'crypto-wallet-payment-for-woocommerce-lite' ); ?></strong>
+                  — <?php esc_html_e( 'No real funds will be transferred. Switch to Mainnet before going live.', 'crypto-wallet-payment-for-woocommerce-lite' ); ?>
+              </div>
+              <?php endif; ?>
+
               <div class="ryanplugins-cwwlite-section-heading">
                   <?php esc_html_e( 'GENERAL SETTINGS', 'crypto-wallet-payment-for-woocommerce-lite' ); ?>
               </div>
               <table class="form-table">
                 <?php
                 $saved = $this->form_fields;
-                $this->form_fields = array_intersect_key( $saved, array_flip( [ 'enabled', 'title', 'description', 'instructions', 'exchange_rate_note', 'hold_message' ] ) );
+                $this->form_fields = array_intersect_key( $saved, array_flip( [ 'enabled', 'environment', 'title', 'description', 'instructions', 'exchange_rate_note', 'hold_message' ] ) );
                 $this->generate_settings_html(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
                 $this->form_fields = $saved;
                 ?>
@@ -347,6 +381,14 @@ class RyanPlugins_CWWLITE_Gateway extends WC_Payment_Gateway {
         ?>
 
         <div class="cwwlite-checkout-wrap">
+
+            <?php if ( $this->is_testnet() ) : ?>
+            <div class="cwwlite-testnet-checkout-banner">
+                <span>🧪</span>
+                <strong><?php esc_html_e( 'Testnet Mode', 'crypto-wallet-payment-for-woocommerce-lite' ); ?></strong>
+                — <?php esc_html_e( 'This is a test environment. Do not send real funds.', 'crypto-wallet-payment-for-woocommerce-lite' ); ?>
+            </div>
+            <?php endif; ?>
 
             <?php if ( $this->description ) : ?>
                 <p class="cwwlite-description"><?php echo wp_kses_post( $this->description ); ?></p>
@@ -510,12 +552,19 @@ class RyanPlugins_CWWLITE_Gateway extends WC_Payment_Gateway {
         $amounts = $this->get_crypto_raw_amounts( [ $network => $cfg ] );
         $crypto_amount = $amounts[ $network ] ?? '';
 
+        // Resolve explorer URL based on environment
+        $explorer = $this->is_testnet()
+            ? ( $cfg['explorer_testnet'] ?? $cfg['explorer'] )
+            : $cfg['explorer'];
+
         // Store order meta
         $order->update_meta_data( '_cwwlite_network',       $network );
         $order->update_meta_data( '_cwwlite_network_label', $cfg['label'] );
         $order->update_meta_data( '_cwwlite_symbol',        $cfg['symbol'] );
         $order->update_meta_data( '_cwwlite_wallet',        $wallet );
         $order->update_meta_data( '_cwwlite_crypto_amount', $crypto_amount );
+        $order->update_meta_data( '_cwwlite_environment',   $this->get_environment() );
+        $order->update_meta_data( '_cwwlite_explorer',      $explorer );
         if ( ! empty( $txid ) ) {
             $order->update_meta_data( '_cwwlite_txid', $txid );
         }
@@ -540,19 +589,39 @@ class RyanPlugins_CWWLITE_Gateway extends WC_Payment_Gateway {
     // ─────────────────────────────────────────────────────────────────────────
 
     public function thankyou_page( $order_id ) {
-        $order   = wc_get_order( $order_id );
+        $order       = wc_get_order( $order_id );
         if ( ! $order ) return;
 
-        $network = $order->get_meta( '_cwwlite_network' );
-        $label   = $order->get_meta( '_cwwlite_network_label' );
-        $symbol  = $order->get_meta( '_cwwlite_symbol' );
-        $wallet  = $order->get_meta( '_cwwlite_wallet' );
-        $amount  = $order->get_meta( '_cwwlite_crypto_amount' );
-        $txid    = $order->get_meta( '_cwwlite_txid' );
-        $cfg     = self::$networks[ $network ] ?? null;
+        $network     = $order->get_meta( '_cwwlite_network' );
+        $label       = $order->get_meta( '_cwwlite_network_label' );
+        $symbol      = $order->get_meta( '_cwwlite_symbol' );
+        $wallet      = $order->get_meta( '_cwwlite_wallet' );
+        $amount      = $order->get_meta( '_cwwlite_crypto_amount' );
+        $txid        = $order->get_meta( '_cwwlite_txid' );
+        $environment = $order->get_meta( '_cwwlite_environment' ) ?: 'mainnet';
+        $explorer    = $order->get_meta( '_cwwlite_explorer' );
+        $is_testnet  = ( $environment === 'testnet' );
+        // Fallback: derive explorer from static config if meta missing
+        if ( empty( $explorer ) ) {
+            $cfg      = self::$networks[ $network ] ?? null;
+            $explorer = $cfg ? $cfg['explorer'] : '';
+        }
         ?>
         <div class="cwwlite-thankyou">
-            <h3><?php esc_html_e( 'Complete Your Crypto Payment', 'crypto-wallet-payment-for-woocommerce-lite' ); ?></h3>
+            <h3>
+                <?php esc_html_e( 'Complete Your Crypto Payment', 'crypto-wallet-payment-for-woocommerce-lite' ); ?>
+                <?php if ( $is_testnet ) : ?>
+                    <span class="cwwlite-testnet-badge"><?php esc_html_e( 'TESTNET', 'crypto-wallet-payment-for-woocommerce-lite' ); ?></span>
+                <?php endif; ?>
+            </h3>
+
+            <?php if ( $is_testnet ) : ?>
+            <div class="cwwlite-testnet-checkout-banner">
+                <span>🧪</span>
+                <strong><?php esc_html_e( 'Testnet Mode', 'crypto-wallet-payment-for-woocommerce-lite' ); ?></strong>
+                — <?php esc_html_e( 'This is a test environment. Do not send real funds.', 'crypto-wallet-payment-for-woocommerce-lite' ); ?>
+            </div>
+            <?php endif; ?>
 
             <?php if ( $this->instructions ) : ?>
                 <p><?php echo wp_kses_post( $this->instructions ); ?></p>
@@ -577,8 +646,8 @@ class RyanPlugins_CWWLITE_Gateway extends WC_Payment_Gateway {
                 <tr>
                     <th><?php esc_html_e( 'TX ID Submitted', 'crypto-wallet-payment-for-woocommerce-lite' ); ?></th>
                     <td>
-                        <?php if ( $cfg && ! empty( $cfg['explorer'] ) ) : ?>
-                            <a href="<?php echo esc_url( ryanplugins_cwwlite_explorer_url( $cfg['explorer'], $txid ) ); ?>" target="_blank">
+                        <?php if ( ! empty( $explorer ) ) : ?>
+                            <a href="<?php echo esc_url( ryanplugins_cwwlite_explorer_url( $explorer, $txid ) ); ?>" target="_blank">
                                 <?php echo esc_html( $txid ); ?>
                             </a>
                         <?php else : ?>
@@ -725,6 +794,14 @@ class RyanPlugins_CWWLITE_Gateway extends WC_Payment_Gateway {
             }
         }
         return $out;
+    }
+
+    public function get_environment(): string {
+        return $this->get_option( 'environment', 'mainnet' );
+    }
+
+    public function is_testnet(): bool {
+        return $this->get_environment() === 'testnet';
     }
 
     private function get_cart_total(): float {

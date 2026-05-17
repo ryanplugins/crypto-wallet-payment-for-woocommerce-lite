@@ -63,10 +63,13 @@ class RyanPlugins_CWWLITE_Admin {
         }
 
         if ( $column === 'cwwlite_txid' ) {
-            $txid    = $order->get_meta( '_cwwlite_txid' );
-            $network = $order->get_meta( '_cwwlite_network' );
-            $cfg     = RyanPlugins_CWWLITE_Gateway::$networks[ $network ] ?? [];
-            $explorer = $cfg['explorer'] ?? '';
+            $txid        = $order->get_meta( '_cwwlite_txid' );
+            $network     = $order->get_meta( '_cwwlite_network' );
+            $environment = $order->get_meta( '_cwwlite_environment' ) ?: 'mainnet';
+            $cfg         = RyanPlugins_CWWLITE_Gateway::$networks[ $network ] ?? [];
+            $explorer    = $environment === 'testnet'
+                ? ( $cfg['explorer_testnet'] ?? $cfg['explorer'] ?? '' )
+                : ( $cfg['explorer'] ?? '' );
 
             if ( $txid ) {
                 $short = substr( $txid, 0, 12 ) . '…';
@@ -115,8 +118,12 @@ class RyanPlugins_CWWLITE_Admin {
         $wallet  = $order->get_meta( '_cwwlite_wallet' );
         $amount  = $order->get_meta( '_cwwlite_crypto_amount' );
         $txid    = $order->get_meta( '_cwwlite_txid' );
-        $cfg     = RyanPlugins_CWWLITE_Gateway::$networks[ $network ] ?? [];
-        $explorer = $cfg['explorer'] ?? '';
+        $environment = $order->get_meta( '_cwwlite_environment' ) ?: 'mainnet';
+        $cfg         = RyanPlugins_CWWLITE_Gateway::$networks[ $network ] ?? [];
+        // Use testnet or mainnet explorer based on the environment saved at order time
+        $explorer    = $environment === 'testnet'
+            ? ( $cfg['explorer_testnet'] ?? $cfg['explorer'] ?? '' )
+            : ( $cfg['explorer'] ?? '' );
 
         wp_nonce_field( 'cwwlite_save_meta_' . $order->get_id(), 'cwwlite_meta_nonce' );
         ?>
@@ -299,7 +306,7 @@ class RyanPlugins_CWWLITE_Admin {
                     <p class="notice-text"
                        style="color:#9daec0;font-size:12px;margin:0;line-height:1.6;">
                         <?php esc_html_e( 'You\'re on the free Lite plan — manual verification only.', 'crypto-wallet-payment-for-woocommerce-lite' ); ?>
-                        <?php echo wp_kses( __( ' Upgrade to <strong style="color:#c8d6e5;font-weight:600;">Pro</strong> for auto blockchain verification, browser wallet auto-send (MetaMask, Phantom, Solflare), stablecoins (USDT / USDC), fraud detection, refund workflow and more.', 'crypto-wallet-payment-for-woocommerce-lite' ), [ 'strong' => [ 'style' => true ] ] ); ?>
+                        <?php echo wp_kses( __( ' Upgrade to <strong style="color:#c8d6e5;font-weight:600;">Pro</strong> for auto blockchain verification, browser wallet auto-send (Cardano wallets: Lace, Vespr, Eternl; WalletConnect: MetaMask; Solana wallets: Phantom, Solflare), stablecoins (USDT / USDC), fraud detection, refund workflow and more.', 'crypto-wallet-payment-for-woocommerce-lite' ), [ 'strong' => [ 'style' => true ] ] ); ?>
                     </p>
                 </div>
 
