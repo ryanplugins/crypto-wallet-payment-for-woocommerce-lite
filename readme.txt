@@ -48,7 +48,7 @@ This plugin does not collect, store, or transmit any personal data beyond what W
 
 The Pro version adds auto blockchain verification, browser wallet auto-send (MetaMask, Phantom, Solflare, Eternl, Lace, Vespr), stablecoin support (USDT/USDC), Cardano (ADA), EVM L2 networks (BNB, MATIC, ARB, OP), fraud detection, refund workflow, order expiry, amount tolerance, and more.
 
-Get Pro: https://www.patreon.com/posts/crypto-wallet-157796120?source=lite
+Get Pro: https://ryanplugins.net/product/crypto-wallet-payment-for-woocommerce-pro/
 
 == Installation ==
 

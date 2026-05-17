@@ -11,7 +11,7 @@ Accept **Bitcoin (BTC), Ethereum (ETH), Solana (SOL), and XRP** payments. Custom
 
 Browser wallet auto-send (MetaMask, Phantom, WalletConnect), stablecoins (USDT/USDC), and Cardano are available in the Pro version.
 
-> 🔗 **[Get Pro Version on Patreon →](https://www.patreon.com/posts/crypto-wallet-157796120?source=lite)**
+> 🔗 **[Get Pro Version on Patreon →](https://ryanplugins.net/product/crypto-wallet-payment-for-woocommerce-pro/)**
 
 ## External Services
 
@@ -103,7 +103,7 @@ Any wallet app that can send a transaction works with the Lite version — custo
 
 ## ⚡ Pro Version — Additional Features
 
-Upgrade to **[Crypto Wallet Payment Pro](https://www.patreon.com/posts/crypto-wallet-157796120?source=lite)** for the full non-custodial WalletConnect and Web3 experience:
+Upgrade to **[Crypto Wallet Payment Pro](https://ryanplugins.net/product/crypto-wallet-payment-for-woocommerce-pro/)** for the full non-custodial WalletConnect and Web3 experience:
 
 - **Auto blockchain verification** — BTC, ETH, SOL, XRP, ADA, BNB, MATIC (Polygon), ARB (Arbitrum), OP (Optimism) verified on-chain via API — no manual checking
 - **Browser wallet auto-send** — MetaMask, Phantom, Solflare, Eternl, Lace, Vespr (one-click send via WalletConnect — no TX paste needed)
@@ -117,7 +117,7 @@ Upgrade to **[Crypto Wallet Payment Pro](https://www.patreon.com/posts/crypto-wa
 - **Dashboard widget** — real-time crypto payment stats
 - **Cardano (ADA) support** — Vespr, Eternl, Lace browser wallets via WalletConnect
 
-> 🔗 **[Get Pro on Patreon →](https://www.patreon.com/posts/crypto-wallet-157796120?source=lite)**
+> 🔗 **[Get Pro on Patreon →](https://ryanplugins.net/product/crypto-wallet-payment-for-woocommerce-pro/)**
 
 ---
 

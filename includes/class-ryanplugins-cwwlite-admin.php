@@ -279,7 +279,7 @@ class RyanPlugins_CWWLITE_Admin {
         $dismissed_at = (int) get_user_meta( get_current_user_id(), 'cwwlite_upgrade_notice_dismissed_at', true );
         if ( $dismissed_at && ( time() - $dismissed_at ) < 7 * DAY_IN_SECONDS ) return;
 
-        $pro_url = 'https://www.patreon.com/posts/crypto-wallet-157796120?source=lite';
+        $pro_url = 'https://ryanplugins.net/product/crypto-wallet-payment-for-woocommerce-pro/';
         $nonce   = wp_create_nonce( 'cwwlite_dismiss_notice' );
         ?>
         <div class="notice cwwlite-admin-notice is-dismissible" id="cwwlite-upgrade-notice"
