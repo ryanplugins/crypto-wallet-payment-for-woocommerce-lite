@@ -1,6 +1,6 @@
 <?php
 /**
- * WooCommerce Blocks integration for the Crypto Wallet Lite payment method.
+ * WooCommerce Blocks integration for the Crypto Wallet payment method.
  *
  * @package CWWLITE
  */
@@ -12,7 +12,7 @@ use Automattic\WooCommerce\Blocks\Payments\Integrations\AbstractPaymentMethodTyp
 /**
  * CWWLITE_Blocks
  *
- * WooCommerce Block Checkout integration for the Lite gateway.
+ * WooCommerce Block Checkout integration for the gateway.
  */
 class CWWLITE_Blocks extends AbstractPaymentMethodType {
 
@@ -84,7 +84,7 @@ class CWWLITE_Blocks extends AbstractPaymentMethodType {
 		}
 
 		return array(
-			'title'              => $this->settings['title'] ?? __( 'Pay with Crypto (Lite)', 'crypto-wallet-payment-for-woocommerce-lite' ),
+			'title'              => $this->settings['title'] ?? __( 'Pay with Crypto', 'crypto-wallet-payment-for-woocommerce-lite' ),
 			'description'        => $this->settings['description'] ?? '',
 			'exchange_rate_note' => $this->settings['exchange_rate_note'] ?? '',
 			'networks'           => $networks,

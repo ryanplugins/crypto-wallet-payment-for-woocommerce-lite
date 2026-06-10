@@ -1,5 +1,5 @@
 /**
- * Crypto Wallet Payment Lite — WooCommerce Block Checkout
+ * Crypto Wallet Payment — WooCommerce Block Checkout
  *
  * Matches the classic checkout UI:
  *  - Pill-style network selector with coin icons
@@ -30,7 +30,7 @@ function formatTime( sec ) {
 
 // ── Label (shown next to the payment method radio) ─────────────────────────
 
-const Label = () => el( 'span', null, settings.title || 'Pay with Crypto (Lite)' );
+const Label = () => el( 'span', null, settings.title || 'Pay with Crypto' );
 
 // ── Countdown hook ─────────────────────────────────────────────────────────
 
@@ -217,7 +217,7 @@ registerPaymentMethod( {
     content:        el( Content ),
     edit:           el( Content ),
     canMakePayment: () => true,
-    ariaLabel:      settings.title || 'Pay with Crypto (Lite)',
+    ariaLabel:      settings.title || 'Pay with Crypto',
     supports: {
         features: settings.supports || [ 'products' ],
     },

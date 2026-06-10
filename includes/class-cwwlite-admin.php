@@ -36,10 +36,6 @@ class CWWLITE_Admin {
 
 		// AJAX: mark verified.
 		add_action( 'wp_ajax_cwwlite_verify_order', array( $this, 'ajax_verify_order' ) );
-
-		// Admin notice: Upgrade to Pro (7-day dismissal).
-		add_action( 'admin_notices', array( $this, 'upgrade_admin_notice' ) );
-		add_action( 'wp_ajax_cwwlite_dismiss_notice', array( $this, 'ajax_dismiss_notice' ) );
 	}
 
 	// ─────────────────────────────────────────────────────────────────────────
@@ -117,7 +113,7 @@ class CWWLITE_Admin {
 		foreach ( $screens as $screen ) {
 			add_meta_box(
 				'cwwlite_order_meta',
-				__( 'Crypto Payment (Lite)', 'crypto-wallet-payment-for-woocommerce-lite' ),
+				__( 'Crypto Payment', 'crypto-wallet-payment-for-woocommerce-lite' ),
 				array( $this, 'render_meta_box' ),
 				$screen,
 				'side',
@@ -137,7 +133,7 @@ class CWWLITE_Admin {
 			: wc_get_order( is_object( $post_or_order ) ? $post_or_order->ID : $post_or_order );
 
 		if ( ! $order || $order->get_payment_method() !== 'cwwlite_crypto' ) {
-			echo '<p>' . esc_html__( 'This order was not paid via Crypto Wallet (Lite).', 'crypto-wallet-payment-for-woocommerce-lite' ) . '</p>';
+			echo '<p>' . esc_html__( 'This order was not paid via Crypto Wallet.', 'crypto-wallet-payment-for-woocommerce-lite' ) . '</p>';
 			return;
 		}
 
@@ -242,7 +238,7 @@ class CWWLITE_Admin {
 		$gateway    = WC()->payment_gateways()->payment_gateways()['cwwlite_crypto'] ?? null;
 		$new_status = $gateway ? $gateway->get_option( 'verified_status', 'processing' ) : 'processing';
 
-		$order->update_status( $new_status, __( 'Manually marked as verified by admin (Crypto Wallet Lite).', 'crypto-wallet-payment-for-woocommerce-lite' ) );
+		$order->update_status( $new_status, __( 'Manually marked as verified by admin.', 'crypto-wallet-payment-for-woocommerce-lite' ) );
 		$order->update_meta_data( '_cwwlite_verified_by', 'manual' );
 		$order->update_meta_data( '_cwwlite_verified_at', current_time( 'mysql' ) );
 		$order->save();
@@ -304,8 +300,7 @@ class CWWLITE_Admin {
 			'cwwlite-admin',
 			'cwwliteAdmin',
 			array(
-				'ajaxUrl'      => admin_url( 'admin-ajax.php' ),
-				'dismissNonce' => wp_create_nonce( 'cwwlite_dismiss_notice' ),
+				'ajaxUrl' => admin_url( 'admin-ajax.php' ),
 			)
 		);
 	}
@@ -335,82 +330,6 @@ class CWWLITE_Admin {
 		return $is_wc_settings;
 	}
 
-	// ─────────────────────────────────────────────────────────────────────────
-	// Upgrade to Pro — admin notice (re-appears after 7 days)
-	// ─────────────────────────────────────────────────────────────────────────
-
-	/**
-	 * Display the upgrade-to-Pro admin notice.
-	 */
-	public function upgrade_admin_notice() {
-		if ( ! current_user_can( 'manage_woocommerce' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown
-			return;
-		}
-		if ( ! is_admin() || wp_doing_ajax() ) {
-			return;
-		}
-
-		// Guideline 11: only show on WooCommerce-related admin screens..
-		$screen = get_current_screen();
-		if ( ! $screen ) {
-			return;
-		}
-		$allowed_screens = array(
-			'woocommerce_page_wc-settings',
-			'woocommerce_page_wc-orders',
-			'shop_order',
-			'plugins',
-		);
-		if ( ! in_array( $screen->id, $allowed_screens, true ) ) {
-			return;
-		}
-
-		$dismissed_at = (int) get_user_meta( get_current_user_id(), 'cwwlite_upgrade_notice_dismissed_at', true );
-		if ( $dismissed_at && ( time() - $dismissed_at ) < 7 * DAY_IN_SECONDS ) {
-			return;
-		}
-
-		$pro_url = 'https://ryanplugins.net/product/crypto-wallet-payment-for-woocommerce-pro/';
-		$nonce   = wp_create_nonce( 'cwwlite_dismiss_notice' );
-		?>
-		<div class="notice cwwlite-admin-notice is-dismissible" id="cwwlite-upgrade-notice">
-			<div class="cwwlite-notice-inner">
-
-				<!-- Icon -->
-				<div class="cwwlite-notice-icon">⚡</div>
-
-				<!-- Text -->
-				<div class="cwwlite-notice-content">
-					<p class="cwwlite-notice-title">
-						<?php esc_html_e( 'Crypto Wallet Payment (Lite) is active', 'crypto-wallet-payment-for-woocommerce-lite' ); ?>
-						<span class="cwwlite-notice-badge">
-							<?php esc_html_e( 'Upgrade Available', 'crypto-wallet-payment-for-woocommerce-lite' ); ?>
-						</span>
-					</p>
-					<p class="cwwlite-notice-text">
-						<?php esc_html_e( "You're on the free Lite plan — manual verification only.", 'crypto-wallet-payment-for-woocommerce-lite' ); ?>
-						<?php echo wp_kses( __( ' Upgrade to <strong>Pro</strong> for auto blockchain verification, browser wallet auto-send (Cardano wallets: Lace, Vespr, Eternl; WalletConnect: MetaMask; Solana wallets: Phantom, Solflare), stablecoins (USDT / USDC), fraud detection, refund workflow and more.', 'crypto-wallet-payment-for-woocommerce-lite' ), array( 'strong' => array() ) ); ?>
-					</p>
-				</div>
-
-				<!-- Actions -->
-				<div class="cwwlite-notice-actions">
-					<a href="<?php echo esc_url( $pro_url ); ?>" target="_blank" rel="noopener"
-						class="cwwlite-notice-cta">
-						<?php esc_html_e( 'Get Pro →', 'crypto-wallet-payment-for-woocommerce-lite' ); ?>
-					</a>
-					<a href="#"
-						id="cwwlite-dismiss-notice"
-						class="cwwlite-notice-dismiss-link"
-						data-nonce="<?php echo esc_attr( $nonce ); ?>">
-						<?php esc_html_e( 'Dismiss for 7 days', 'crypto-wallet-payment-for-woocommerce-lite' ); ?>
-					</a>
-				</div>
-
-			</div>
-		</div>
-		<?php
-	}
 
 	// ─────────────────────────────────────────────────────────────────────────
 	// AJAX: record dismissal timestamp (notice returns after 7 days)

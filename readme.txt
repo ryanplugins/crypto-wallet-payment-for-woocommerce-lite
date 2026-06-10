@@ -44,29 +44,13 @@ CoinGecko Privacy Policy: https://www.coingecko.com/en/privacy
 
 This plugin does not collect, store, or transmit any personal data beyond what WooCommerce already stores as part of the order. The only external HTTP request made is to the CoinGecko public API to retrieve exchange rates. No user identifiable data is included in that request.
 
-= Upgrade to Pro =
-
-The Pro version adds auto blockchain verification, browser wallet auto-send (MetaMask, Phantom, Solflare, Eternl, Lace, Vespr), stablecoin support (USDT/USDC), Cardano (ADA), EVM L2 networks (BNB, MATIC, ARB, OP), fraud detection, refund workflow, order expiry, amount tolerance, and more.
-
-Get Pro: https://ryanplugins.net/product/crypto-wallet-payment-for-woocommerce-pro/
-
-== Installation ==
-
-1. Upload the `cwwlite` folder to `/wp-content/plugins/`
-2. Activate the plugin via **Plugins → Installed Plugins**
-3. Go to **WooCommerce → Settings → Payments → Crypto Wallet Payment (Lite)**
-4. Enter your wallet address for each network you want to accept
-5. Save — the payment method is immediately available at checkout
-
-== Frequently Asked Questions ==
-
 = Does this plugin require an API key? =
 No. Exchange rates are fetched from CoinGecko's free public API. No account or API key is needed.
 
 = Does it require KYC or a payment processor account? =
 No. Payments go directly to your wallet. No third-party account, KYC, or custodial service is involved.
 
-= Which cryptocurrencies are supported in the Lite version? =
+= Which cryptocurrencies are supported in the ? =
 Bitcoin (BTC), Ethereum (ETH), Solana (SOL), and XRP.
 
 = How does manual verification work? =
@@ -87,7 +71,6 @@ Yes. All functions, classes, and options use the `cwwlite` prefix to avoid confl
 2. Block (Gutenberg) checkout — identical UI in the WooCommerce Block Checkout
 3. Settings page — tabbed admin interface with General and Networks & Wallets tabs
 4. Admin order management — crypto meta box with TX ID, block explorer link, and one-click verification button
-5. Upgrade to Pro settings tab
 
 == Changelog ==
 

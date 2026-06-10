@@ -1,5 +1,5 @@
 /**
- * Crypto Wallet Payment (Lite) — Settings Page JS
+ * Crypto Wallet Payment — Settings Page JS
  *
  * Handles:
  *  - Horizontal tab switching (General / Networks)

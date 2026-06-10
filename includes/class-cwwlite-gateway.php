@@ -1,6 +1,6 @@
 <?php
 /**
- * WooCommerce payment gateway: Crypto Wallet Payment (Lite).
+ * WooCommerce payment gateway: Crypto Wallet Payment.
  *
  * @package CWWLITE
  */
@@ -10,9 +10,9 @@ defined( 'ABSPATH' ) || exit;
 /**
  * CWWLITE_Gateway
  *
- * Lite WooCommerce payment gateway for crypto.
+ * WooCommerce payment gateway for crypto.
  *
- * Supported networks (Lite): Bitcoin (BTC), Ethereum (ETH), Solana (SOL), XRP.
+ * Supported networks: Bitcoin (BTC), Ethereum (ETH), Solana (SOL), XRP.
  * — No stablecoins, no EVM L2s, no Cardano browser-wallet auto-send.
  * — Manual TX submission only; admin verifies orders by hand.
  * — Live exchange rates via CoinGecko (no API key needed).
@@ -39,7 +39,7 @@ class CWWLITE_Gateway extends WC_Payment_Gateway {
 	public string $hold_message = '';
 
 	// ─────────────────────────────────────────────────────────────────────────
-	// Supported networks (Lite edition)
+	// Supported networks.
 	// ─────────────────────────────────────────────────────────────────────────
 
 	/**
@@ -109,7 +109,7 @@ class CWWLITE_Gateway extends WC_Payment_Gateway {
 		$this->id                 = 'cwwlite_crypto';
 		$this->icon               = '';
 		$this->has_fields         = true;
-		$this->method_title       = __( 'Crypto Wallet Payment (Lite)', 'crypto-wallet-payment-for-woocommerce-lite' );
+		$this->method_title       = __( 'Crypto Wallet Payment', 'crypto-wallet-payment-for-woocommerce-lite' );
 		$this->method_description = __( 'Accept BTC, ETH, SOL and XRP. Manual verification — no API keys needed.', 'crypto-wallet-payment-for-woocommerce-lite' );
 
 		$this->init_form_fields();
@@ -150,7 +150,7 @@ class CWWLITE_Gateway extends WC_Payment_Gateway {
 			'enabled'            => array(
 				'title'   => __( 'Enable/Disable', 'crypto-wallet-payment-for-woocommerce-lite' ),
 				'type'    => 'checkbox',
-				'label'   => __( 'Enable Crypto Wallet Payment (Lite)', 'crypto-wallet-payment-for-woocommerce-lite' ),
+				'label'   => __( 'Enable Crypto Wallet Payment', 'crypto-wallet-payment-for-woocommerce-lite' ),
 				'default' => 'yes',
 			),
 			'environment'        => array(
