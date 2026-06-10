@@ -65,13 +65,6 @@ Yes. The plugin is fully compatible with WooCommerce High-Performance Order Stor
 = Can I use it alongside the Pro version? =
 Yes. All functions, classes, and options use the `cwwlite` prefix to avoid conflicts.
 
-== Screenshots ==
-
-1. Classic checkout — pill-style network selector with live crypto amounts, wallet address copy button, and TX ID field
-2. Block (Gutenberg) checkout — identical UI in the WooCommerce Block Checkout
-3. Settings page — tabbed admin interface with General and Networks & Wallets tabs
-4. Admin order management — crypto meta box with TX ID, block explorer link, and one-click verification button
-
 == Changelog ==
 
 = 1.0.0 =
