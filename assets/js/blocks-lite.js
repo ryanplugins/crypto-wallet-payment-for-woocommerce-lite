@@ -13,7 +13,7 @@ const { registerPaymentMethod }                  = window.wc.wcBlocksRegistry;
 const { getSetting }                             = window.wc.wcSettings;
 const { createElement: el, useState, useEffect } = window.wp.element;
 
-const settings    = getSetting( 'ryanplugins_cwwlite_crypto_data', {} );
+const settings    = getSetting( 'cwwlite_crypto_data', {} );
 const networks    = settings.networks    || {};
 const wallets     = settings.wallets     || {};
 const amounts     = settings.amounts     || {};
@@ -212,7 +212,7 @@ const Content = ( { eventRegistration, emitResponse } ) => {
 // ── Register ───────────────────────────────────────────────────────────────
 
 registerPaymentMethod( {
-    name:           'ryanplugins_cwwlite_crypto',
+    name:           'cwwlite_crypto',
     label:          el( Label ),
     content:        el( Content ),
     edit:           el( Content ),

@@ -1,5 +1,5 @@
 /* =============================================================================
-   RyanPlugins — WooCommerce Gateway Settings Page CSS Template
+   CWWLITE — WooCommerce Gateway Settings Page CSS Template
    Version:    1.0.0
    Author:     RyanPlugins
    Compatible: WordPress 5.8+ / WooCommerce 6.0+
@@ -11,77 +11,77 @@
    2. Find & replace the prefix throughout this file:
         FIND    →  REPLACE WITH
         ──────────────────────────────
-        PREFIX  →  ryanplugins-myplugin   (hyphenated, for CSS classes/ids)
+        PREFIX  →  cwwlite-myplugin   (hyphenated, for CSS classes/ids)
         e.g.:
-        ryanplugins-cwwlite  →  ryanplugins-stripe
-        ryanplugins-cwwlite  →  ryanplugins-paypal
-        ryanplugins-cwwlite  →  ryanplugins-myplugin
+        cwwlite  →  cwwlite-stripe
+        cwwlite  →  cwwlite-paypal
+        cwwlite  →  cwwlite-myplugin
 
    3. Enqueue only on your settings page:
         wp_enqueue_style(
-            'ryanplugins-myplugin-settings',
+            'cwwlite-myplugin-settings',
             plugin_dir_url( __FILE__ ) . 'assets/css/settings.css',
             [],
-            RYANPLUGINS_MYPLUGIN_VERSION
+            CWWLITE_VERSION
         );
 
    ─────────────────────────────────────────────────────────────────────────────
    REQUIRED HTML STRUCTURE  (in your admin_options() method)
    ─────────────────────────────────────────────────────────────────────────────
 
-   <div id="ryanplugins-cwwlite-settings-wrap">
+   <div id="cwwlite-settings-wrap">
      <form method="post" id="mainform" action="" enctype="multipart/form-data">
 
        <?php wp_nonce_field( 'woocommerce-settings' ); ?>
        <input type="hidden" name="myplugin_active_tab"
-              id="ryanplugins-cwwlite-active-tab-input" value="general" />
+              id="cwwlite-active-tab-input" value="general" />
 
        <!-- Tab nav -->
-       <div class="ryanplugins-cwwlite-nav-tabs" role="tablist">
+       <div class="cwwlite-nav-tabs" role="tablist">
 
          <!-- Tab button (use <button type="button"> NOT <a href="#">) -->
          <button type="button"
-                 class="ryanplugins-cwwlite-nav-tab ryanplugins-cwwlite-nav-tab-active"
+                 class="cwwlite-nav-tab cwwlite-nav-tab-active"
                  data-tab="general">
            General
            <!-- Optional badge -->
-           <span class="ryanplugins-cwwlite-tab-badge ryanplugins-cwwlite-tab-badge-warn">!</span>
+           <span class="cwwlite-tab-badge cwwlite-tab-badge-warn">!</span>
          </button>
 
-         <button type="button" class="ryanplugins-cwwlite-nav-tab" data-tab="advanced">
+         <button type="button" class="cwwlite-nav-tab" data-tab="advanced">
            Advanced
            <!-- Optional error count badge -->
-           <span class="ryanplugins-cwwlite-tab-badge ryanplugins-cwwlite-tab-badge-err">2</span>
+           <span class="cwwlite-tab-badge cwwlite-tab-badge-err">2</span>
          </button>
 
          <!-- Optional: inline status pill after tabs -->
-         <span class="ryanplugins-cwwlite-test-indicator">🧪 Test Mode Active</span>
+         <span class="cwwlite-test-indicator">🧪 Test Mode Active</span>
 
-       </div><!-- .ryanplugins-cwwlite-nav-tabs -->
+       </div><!-- .cwwlite-nav-tabs -->
 
        <!-- Tab panels (all rendered, JS shows/hides) -->
-       <div class="ryanplugins-cwwlite-tab-panel ryanplugins-cwwlite-tab-panel-active"
-            id="ryanplugins-cwwlite-panel-general" role="tabpanel">
-         <div class="ryanplugins-cwwlite-section-heading">GENERAL SETTINGS</div>
+       <div class="cwwlite-tab-panel cwwlite-tab-panel-active"
+            id="cwwlite-panel-general" role="tabpanel">
+         <div class="cwwlite-section-heading">GENERAL SETTINGS</div>
          <table class="form-table">...</table>
        </div>
 
-       <div class="ryanplugins-cwwlite-tab-panel"
-            id="ryanplugins-cwwlite-panel-advanced" role="tabpanel" hidden>
-         <div class="ryanplugins-cwwlite-section-heading">ADVANCED SETTINGS</div>
+       <div class="cwwlite-tab-panel"
+            id="cwwlite-panel-advanced" role="tabpanel" hidden>
+         <div class="cwwlite-section-heading">ADVANCED SETTINGS</div>
          <table class="form-table">...</table>
        </div>
 
        <!-- Save button — MUST be inside the form -->
-       <p class="ryanplugins-cwwlite-submit" id="ryanplugins-cwwlite-save-btn-row">
+       <p class="cwwlite-submit" id="cwwlite-save-btn-row">
          <button type="submit" name="save" class="button-primary">Save changes</button>
        </p>
 
      </form>
-   </div><!-- #ryanplugins-cwwlite-settings-wrap -->
+   </div><!-- #cwwlite-settings-wrap -->
 
    <!-- Toast container injected by JS into <body> -->
-   <!-- <div id="ryanplugins-cwwlite-toast"></div>  ← created by settings.js -->
+   <!-- <div id="cwwlite-toast"></div>  ← created by settings.js -->
 
    ─────────────────────────────────────────────────────────────────────────────
    KNOWN ISSUES & SOLUTIONS (learned the hard way)
@@ -112,7 +112,7 @@
 
 
 /* ── 1. Outer wrap ───────────────────────────────────────────────────────── */
-#ryanplugins-cwwlite-settings-wrap {
+#cwwlite-settings-wrap {
     max-width: 100%;
     margin: 0;
     padding: 0;
@@ -121,7 +121,7 @@
 
 
 /* ── 2. Horizontal tab nav bar ───────────────────────────────────────────── */
-.ryanplugins-cwwlite-nav-tabs {
+.cwwlite-nav-tabs {
     display: flex;
     align-items: flex-end;
     flex-wrap: wrap;
@@ -146,7 +146,7 @@
    An href="#" changes the URL hash and triggers the browser's
    "Leave site?" dialog because WooCommerce registers a beforeunload handler.
 */
-.ryanplugins-cwwlite-nav-tab {
+.cwwlite-nav-tab {
     display: inline-flex;
     align-items: center;
     gap: 5px;
@@ -176,21 +176,21 @@
     transition: color .05s ease-in-out, background .05s ease-in-out;
 }
 
-.ryanplugins-cwwlite-nav-tab:hover {
+.cwwlite-nav-tab:hover {
     color: #2271b1;
     background: #fff;
     border-color: #c3c4c7;
     box-shadow: none !important;
 }
 
-.ryanplugins-cwwlite-nav-tab:focus {
+.cwwlite-nav-tab:focus {
     box-shadow: none !important;
     outline: none !important;
     border-color: #c3c4c7;
 }
 
 /* Active: white bg + white bottom border merges seamlessly with panel below */
-.ryanplugins-cwwlite-nav-tab.ryanplugins-cwwlite-nav-tab-active {
+.cwwlite-nav-tab.cwwlite-nav-tab-active {
     background: #fff;
     color: #2271b1;
     font-weight: 600;
@@ -201,7 +201,7 @@
 
 /* ── 4. Inline status indicator (optional) ───────────────────────────────── */
 /* Sits inline after the tab buttons — e.g. "🧪 Test Mode Active" */
-.ryanplugins-cwwlite-test-indicator {
+.cwwlite-test-indicator {
     align-self: center;
     margin-left: 10px;
     margin-bottom: 4px;
@@ -218,8 +218,8 @@
 
 
 /* ── 5. Small badge inside a tab button ──────────────────────────────────── */
-/* Usage: <span class="ryanplugins-cwwlite-tab-badge ryanplugins-cwwlite-tab-badge-warn">!</span> */
-.ryanplugins-cwwlite-tab-badge {
+/* Usage: <span class="cwwlite-tab-badge cwwlite-tab-badge-warn">!</span> */
+.cwwlite-tab-badge {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -232,14 +232,14 @@
     line-height: 1;
 }
 
-.ryanplugins-cwwlite-tab-badge-warn { background: #dba617; color: #fff; } /* amber */
-.ryanplugins-cwwlite-tab-badge-err  { background: #cc1818; color: #fff; } /* red   */
-.ryanplugins-cwwlite-tab-badge-ok   { background: #1e8a1e; color: #fff; } /* green */
+.cwwlite-tab-badge-warn { background: #dba617; color: #fff; } /* amber */
+.cwwlite-tab-badge-err  { background: #cc1818; color: #fff; } /* red   */
+.cwwlite-tab-badge-ok   { background: #1e8a1e; color: #fff; } /* green */
 
 
 /* ── 6. Tab panel container ──────────────────────────────────────────────── */
-.ryanplugins-cwwlite-tab-panel {
-    display: none; /* JS adds .ryanplugins-cwwlite-tab-panel-active to show */
+.cwwlite-tab-panel {
+    display: none; /* JS adds .cwwlite-tab-panel-active to show */
     background: #fff;
     border: 1px solid #c3c4c7;
     border-top: none; /* top edge is the nav bar underline */
@@ -248,14 +248,14 @@
     box-sizing: border-box;
 }
 
-.ryanplugins-cwwlite-tab-panel.ryanplugins-cwwlite-tab-panel-active {
+.cwwlite-tab-panel.cwwlite-tab-panel-active {
     display: block;
 }
 
 
 /* ── 7. Section heading inside panel ─────────────────────────────────────── */
 /* Grey uppercase label at the top of each panel — matches WC native style */
-.ryanplugins-cwwlite-section-heading {
+.cwwlite-section-heading {
     font-size: 11px;
     font-weight: 600;
     color: #646970;
@@ -274,14 +274,14 @@
    This breaks custom layouts (e.g. networks table spanning both columns).
    We scope overrides to our wrap ID to avoid affecting other WC settings.
 */
-.ryanplugins-cwwlite-tab-panel .form-table {
+.cwwlite-tab-panel .form-table {
     margin: 0;
     table-layout: auto; /* prevent fixed-layout squishing */
     width: 100%;
 }
 
 /* Label column — fixed 200px */
-#ryanplugins-cwwlite-settings-wrap .form-table > tbody > tr > th {
+#cwwlite-settings-wrap .form-table > tbody > tr > th {
     width: 200px;
     min-width: 200px;
     padding: 15px 10px 15px 0;
@@ -293,31 +293,31 @@
 }
 
 /* Value column — takes all remaining space */
-#ryanplugins-cwwlite-settings-wrap .form-table > tbody > tr > td {
+#cwwlite-settings-wrap .form-table > tbody > tr > td {
     width: auto;
     padding: 15px 0;
     vertical-align: top;
 }
 
 /* Full-width colspan=2 rows (custom tables, networks table, etc.) */
-#ryanplugins-cwwlite-settings-wrap .form-table td[colspan="2"] {
+#cwwlite-settings-wrap .form-table td[colspan="2"] {
     width: 100% !important;
     max-width: none !important;
     padding: 12px 0;
 }
 
 /* Row dividers */
-.ryanplugins-cwwlite-tab-panel .form-table tr {
+.cwwlite-tab-panel .form-table tr {
     border-bottom: 1px solid #f6f7f7;
 }
 
-.ryanplugins-cwwlite-tab-panel .form-table tr:last-child {
+.cwwlite-tab-panel .form-table tr:last-child {
     border-bottom: none;
 }
 
 /* WC section title rows rendered inside form-table */
-.ryanplugins-cwwlite-tab-panel h3,
-.ryanplugins-cwwlite-tab-panel .wc-settings-sub-title {
+.cwwlite-tab-panel h3,
+.cwwlite-tab-panel .wc-settings-sub-title {
     font-size: 14px !important;
     font-weight: 600 !important;
     color: #1d2327 !important;
@@ -328,8 +328,8 @@
 }
 
 /* Description / help text */
-.ryanplugins-cwwlite-tab-panel p.description,
-.ryanplugins-cwwlite-tab-panel .description {
+.cwwlite-tab-panel p.description,
+.cwwlite-tab-panel .description {
     font-size: 13px;
     color: #646970;
     margin: 5px 0 0;
@@ -340,21 +340,21 @@
 
 /* ── 9. Input styling ────────────────────────────────────────────────────── */
 /* Normalise border and focus ring to match WP admin standard */
-.ryanplugins-cwwlite-tab-panel input[type="text"],
-.ryanplugins-cwwlite-tab-panel input[type="password"],
-.ryanplugins-cwwlite-tab-panel input[type="number"],
-.ryanplugins-cwwlite-tab-panel input[type="email"],
-.ryanplugins-cwwlite-tab-panel input[type="url"],
-.ryanplugins-cwwlite-tab-panel textarea,
-.ryanplugins-cwwlite-tab-panel select {
+.cwwlite-tab-panel input[type="text"],
+.cwwlite-tab-panel input[type="password"],
+.cwwlite-tab-panel input[type="number"],
+.cwwlite-tab-panel input[type="email"],
+.cwwlite-tab-panel input[type="url"],
+.cwwlite-tab-panel textarea,
+.cwwlite-tab-panel select {
     border-color: #8c8f94 !important;
     border-radius: 4px !important;
     box-shadow: none !important;
 }
 
-.ryanplugins-cwwlite-tab-panel input:focus,
-.ryanplugins-cwwlite-tab-panel textarea:focus,
-.ryanplugins-cwwlite-tab-panel select:focus {
+.cwwlite-tab-panel input:focus,
+.cwwlite-tab-panel textarea:focus,
+.cwwlite-tab-panel select:focus {
     border-color: #2271b1 !important;
     box-shadow: 0 0 0 1px #2271b1 !important;
     outline: 2px solid transparent !important;
@@ -368,7 +368,7 @@
    That external one is hidden by JS (see settings.js).
    The License tab hides this row entirely (it uses AJAX buttons instead).
 */
-.ryanplugins-cwwlite-submit {
+.cwwlite-submit {
     margin: 16px 0 0;
     padding: 12px 0 0;
     border-top: 1px solid #f0f0f1;
@@ -383,7 +383,7 @@
    Shows bottom-right on submit ("💾 Saving…") and after reload ("✅ Saved!").
    Click anywhere on the toast to dismiss early.
 */
-#ryanplugins-cwwlite-toast {
+#cwwlite-toast {
     position: fixed;
     bottom: 28px;
     right: 28px;
@@ -396,27 +396,27 @@
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
     cursor: pointer;
     max-width: 320px;
-    /* Hidden by default — JS adds .ryanplugins-cwwlite-toast-visible to animate in */
+    /* Hidden by default — JS adds .cwwlite-toast-visible to animate in */
     opacity: 0;
     transform: translateY(12px);
     transition: opacity 0.22s ease, transform 0.22s ease;
     pointer-events: none;
 }
 
-#ryanplugins-cwwlite-toast.ryanplugins-cwwlite-toast-visible {
+#cwwlite-toast.cwwlite-toast-visible {
     opacity: 1;
     transform: translateY(0);
     pointer-events: auto;
 }
 
 /* "Saving…" state — dark pill */
-#ryanplugins-cwwlite-toast.ryanplugins-cwwlite-toast-saving {
+#cwwlite-toast.cwwlite-toast-saving {
     background: #1d2327;
     color: #fff;
 }
 
 /* "Saved!" state — white card with green left border */
-#ryanplugins-cwwlite-toast.ryanplugins-cwwlite-toast-success {
+#cwwlite-toast.cwwlite-toast-success {
     background: #fff;
     color: #1d2327;
     border: 1px solid #c3c4c7;
@@ -429,13 +429,13 @@
    ============================================================================= */
 
 /* ── Wallet address rows ─────────────────────────────────────────────────── */
-.ryanplugins-cwwlite-wallet-row {
+.cwwlite-wallet-row {
     display: flex;
     align-items: center;
     gap: 10px;
 }
 
-.ryanplugins-cwwlite-wallet-row input[type="text"] {
+.cwwlite-wallet-row input[type="text"] {
     flex: 1;
     max-width: 460px;
     font-family: monospace;
@@ -443,7 +443,7 @@
     letter-spacing: 0.02em;
 }
 
-.ryanplugins-cwwlite-network-icon {
+.cwwlite-network-icon {
     width: 22px;
     height: 22px;
     flex-shrink: 0;
@@ -452,7 +452,7 @@
 }
 
 /* ── Network status chip ─────────────────────────────────────────────────── */
-.ryanplugins-cwwlite-network-chip {
+.cwwlite-network-chip {
     display: inline-flex;
     align-items: center;
     gap: 5px;
@@ -464,12 +464,12 @@
     margin-left: 6px;
 }
 
-.ryanplugins-cwwlite-chip-active {
+.cwwlite-chip-active {
     background: #d1f0da;
     color: #0a7227;
 }
 
-.ryanplugins-cwwlite-chip-inactive {
+.cwwlite-chip-inactive {
     background: #f0f0f1;
     color: #787c82;
 }

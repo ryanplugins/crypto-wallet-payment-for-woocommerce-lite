@@ -23,7 +23,7 @@
             url:    admin.ajaxUrl,
             method: 'POST',
             data: {
-                action:   'ryanplugins_cwwlite_verify_order',
+                action:   'cwwlite_verify_order',
                 order_id: orderId,
                 nonce:    nonce,
             },
@@ -61,7 +61,7 @@
             url:    admin.ajaxUrl,
             method: 'POST',
             data: {
-                action: 'ryanplugins_cwwlite_dismiss_notice',
+                action: 'cwwlite_dismiss_notice',
                 nonce:  admin.dismissNonce,
             },
         });

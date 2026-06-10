@@ -8,10 +8,10 @@
  * Author URI:  https://profiles.wordpress.org/ryanplugins/
  * License:     GPL-2.0+
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain: crypto-wallet-payment-for-woocommerce-lite
+ * Text Domain: cwwlite
  * Domain Path: /languages
  *
- * @package RyanPlugins_CWWLITE
+ * @package CWWLITE
  * Requires at least: 5.8
  * Requires PHP: 7.4
  * WC requires at least: 6.0
@@ -20,9 +20,9 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'RYANPLUGINS_CWWLITE_VERSION', '1.0.0' );
-define( 'RYANPLUGINS_CWWLITE_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
-define( 'RYANPLUGINS_CWWLITE_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
+define( 'CWWLITE_VERSION', '1.0.0' );
+define( 'CWWLITE_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
+define( 'CWWLITE_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 
 // ── Activation / Deactivation ────────────────────────────────────────────────
 
@@ -31,7 +31,7 @@ register_activation_hook(
 	function () {
 		flush_rewrite_rules();
 		foreach ( array( 'usd', 'eur', 'gbp', 'php', 'jpy', 'aud', 'cad' ) as $cur ) {
-			delete_transient( 'ryanplugins_cwwlite_live_rates_' . $cur );
+			delete_transient( 'cwwlite_live_rates_' . $cur );
 		}
 	}
 );
@@ -72,22 +72,22 @@ add_filter(
 /**
  * Bootstrap the plugin after all plugins are loaded.
  */
-function ryanplugins_cwwlite_init() {
+function cwwlite_init() {
 	if ( ! class_exists( 'WooCommerce' ) ) {
-		add_action( 'admin_notices', 'ryanplugins_cwwlite_missing_wc_notice' );
+		add_action( 'admin_notices', 'cwwlite_missing_wc_notice' );
 		return;
 	}
 
-	require_once RYANPLUGINS_CWWLITE_PLUGIN_DIR . 'includes/class-ryanplugins-cwwlite-gateway.php';
-	require_once RYANPLUGINS_CWWLITE_PLUGIN_DIR . 'includes/class-ryanplugins-cwwlite-admin.php';
-	require_once RYANPLUGINS_CWWLITE_PLUGIN_DIR . 'includes/class-ryanplugins-cwwlite-order-handler.php';
+	require_once CWWLITE_PLUGIN_DIR . 'includes/class-cwwlite-gateway.php';
+	require_once CWWLITE_PLUGIN_DIR . 'includes/class-cwwlite-admin.php';
+	require_once CWWLITE_PLUGIN_DIR . 'includes/class-cwwlite-order-handler.php';
 
-	add_filter( 'woocommerce_payment_gateways', 'ryanplugins_cwwlite_register_gateway' );
+	add_filter( 'woocommerce_payment_gateways', 'cwwlite_register_gateway' );
 
-	new RyanPlugins_CWWLITE_Admin();
-	new RyanPlugins_CWWLITE_Order_Handler();
+	new CWWLITE_Admin();
+	new CWWLITE_Order_Handler();
 }
-add_action( 'plugins_loaded', 'ryanplugins_cwwlite_init' );
+add_action( 'plugins_loaded', 'cwwlite_init' );
 
 // ── WooCommerce Blocks support ────────────────────────────────────────────────
 
@@ -96,7 +96,7 @@ add_action(
 	function () {
 		add_action(
 			'woocommerce_blocks_payment_method_type_registration',
-			'ryanplugins_cwwlite_register_blocks_payment_method'
+			'cwwlite_register_blocks_payment_method'
 		);
 	},
 	5
@@ -107,21 +107,21 @@ add_action(
  *
  * @param \Automattic\WooCommerce\Blocks\Payments\PaymentMethodRegistry $registry Registry instance.
  */
-function ryanplugins_cwwlite_register_blocks_payment_method( $registry ): void {
-	if ( defined( 'RYANPLUGINS_CWWLITE_BLOCKS_REGISTERED' ) ) {
+function cwwlite_register_blocks_payment_method( $registry ): void {
+	if ( defined( 'CWWLITE_BLOCKS_REGISTERED' ) ) {
 		return;
 	}
-	define( 'RYANPLUGINS_CWWLITE_BLOCKS_REGISTERED', true );
+	define( 'CWWLITE_BLOCKS_REGISTERED', true );
 
 	if ( ! class_exists( 'Automattic\\WooCommerce\\Blocks\\Payments\\Integrations\\AbstractPaymentMethodType' ) ) {
 		return;
 	}
 
-	if ( ! class_exists( 'RyanPlugins_CWWLITE_Blocks' ) ) {
-		require_once RYANPLUGINS_CWWLITE_PLUGIN_DIR . 'includes/class-ryanplugins-cwwlite-blocks.php';
+	if ( ! class_exists( 'CWWLITE_Blocks' ) ) {
+		require_once CWWLITE_PLUGIN_DIR . 'includes/class-cwwlite-blocks.php';
 	}
 
-	$registry->register( new RyanPlugins_CWWLITE_Blocks() );
+	$registry->register( new CWWLITE_Blocks() );
 }
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -133,7 +133,7 @@ function ryanplugins_cwwlite_register_blocks_payment_method( $registry ): void {
  * @param string $txid Transaction hash.
  * @return string
  */
-function ryanplugins_cwwlite_explorer_url( string $base, string $txid ): string {
+function cwwlite_explorer_url( string $base, string $txid ): string {
 	if ( empty( $base ) || empty( $txid ) ) {
 		return '';
 	}
@@ -149,28 +149,28 @@ function ryanplugins_cwwlite_explorer_url( string $base, string $txid ): string 
  * @param array $gateways Existing gateways.
  * @return array
  */
-function ryanplugins_cwwlite_register_gateway( $gateways ) {
-	$gateways[] = 'RyanPlugins_CWWLITE_Gateway';
+function cwwlite_register_gateway( $gateways ) {
+	$gateways[] = 'CWWLITE_Gateway';
 	return $gateways;
 }
 
-add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), 'ryanplugins_cwwlite_action_links' );
+add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), 'cwwlite_action_links' );
 /**
  * Add a Settings link on the Plugins list page.
  *
  * @param array $links Existing action links.
  * @return array
  */
-function ryanplugins_cwwlite_action_links( $links ) {
-	$settings_url = admin_url( 'admin.php?page=wc-settings&tab=checkout&section=ryanplugins_cwwlite_crypto' );
-	array_unshift( $links, '<a href="' . esc_url( $settings_url ) . '">' . esc_html__( 'Settings', 'crypto-wallet-payment-for-woocommerce-lite' ) . '</a>' );
+function cwwlite_action_links( $links ) {
+	$settings_url = admin_url( 'admin.php?page=wc-settings&tab=checkout&section=cwwlite_crypto' );
+	array_unshift( $links, '<a href="' . esc_url( $settings_url ) . '">' . esc_html__( 'Settings', 'cwwlite' ) . '</a>' );
 	return $links;
 }
 
 /**
  * Show admin notice when WooCommerce is not active.
  */
-function ryanplugins_cwwlite_missing_wc_notice() {
+function cwwlite_missing_wc_notice() {
 	echo '<div class="error"><p><strong>Crypto Wallet Payment (Lite)</strong> requires WooCommerce to be installed and active.</p></div>';
 }
 

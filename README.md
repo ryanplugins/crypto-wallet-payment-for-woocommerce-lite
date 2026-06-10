@@ -123,7 +123,7 @@ Upgrade to **[Crypto Wallet Payment Pro](https://ryanplugins.net/product/crypto-
 
 ## Installation
 
-1. Upload the `crypto-wallet-payment-for-woocommerce-lite` folder to `/wp-content/plugins/`.
+1. Upload the `cwwlite` folder to `/wp-content/plugins/`.
 2. Activate via **Plugins → Installed Plugins**.
 3. Go to **WooCommerce → Settings → Payments → Crypto Wallet Payment (Lite)**.
 4. Enter your wallet addresses for each network you want to accept.
@@ -173,13 +173,13 @@ Yes. The plugin is fully compatible with WooCommerce High-Performance Order Stor
 ## File Structure
 
 ```
-crypto-wallet-payment-for-woocommerce-lite/
+cwwlite/
 ├── ryanplugins-crypto-wallet-lite.php           ← Main plugin file
 ├── includes/
 │   ├── class-ryanplugins-cwwlite-gateway.php    ← Payment gateway
-│   ├── class-ryanplugins-cwwlite-admin.php      ← Admin columns & meta box
+│   ├── class-cwwlite-admin.php      ← Admin columns & meta box
 │   ├── class-ryanplugins-cwwlite-order-handler.php ← My Account TX form
-│   └── class-ryanplugins-cwwlite-blocks.php     ← Block Checkout support
+│   └── class-cwwlite-blocks.php     ← Block Checkout support
 ├── assets/
 │   ├── css/
 │   │   ├── checkout.css
@@ -201,9 +201,9 @@ crypto-wallet-payment-for-woocommerce-lite/
 
 | Scope | Prefix |
 |---|---|
-| PHP classes | `RyanPlugins_CWWLITE_` |
+| PHP classes | `CWWLITE_` |
 | PHP functions | `ryanplugins_cwwlite_` |
-| WP option keys | `woocommerce_ryanplugins_cwwlite_crypto_settings` |
+| WP option keys | `woocommerce_cwwlite_crypto_settings` |
 | Order meta keys | `_cwwlite_*` |
 | CSS classes | `.cwwlite-*` |
 | JS globals | `cwwliteData`, `cwwliteAdmin` |

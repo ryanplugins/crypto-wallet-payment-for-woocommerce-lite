@@ -2,19 +2,19 @@
 /**
  * Admin class: order columns, meta box, assets, and upgrade notice.
  *
- * @package RyanPlugins_CWWLITE
+ * @package CWWLITE
  */
 
 defined( 'ABSPATH' ) || exit;
 
 /**
- * RyanPlugins_CWWLITE_Admin
+ * CWWLITE_Admin
  *
  * - Adds TX ID / network columns to the orders list.
  * - Adds a meta box on the order edit page for manual verification.
  * - Admin asset enqueueing.
  */
-class RyanPlugins_CWWLITE_Admin {
+class CWWLITE_Admin {
 
 	/**
 	 * Constructor. Register all admin hooks.
@@ -35,11 +35,11 @@ class RyanPlugins_CWWLITE_Admin {
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_assets' ) );
 
 		// AJAX: mark verified.
-		add_action( 'wp_ajax_ryanplugins_cwwlite_verify_order', array( $this, 'ajax_verify_order' ) );
+		add_action( 'wp_ajax_cwwlite_verify_order', array( $this, 'ajax_verify_order' ) );
 
 		// Admin notice: Upgrade to Pro (7-day dismissal).
 		add_action( 'admin_notices', array( $this, 'upgrade_admin_notice' ) );
-		add_action( 'wp_ajax_ryanplugins_cwwlite_dismiss_notice', array( $this, 'ajax_dismiss_notice' ) );
+		add_action( 'wp_ajax_cwwlite_dismiss_notice', array( $this, 'ajax_dismiss_notice' ) );
 	}
 
 	// ─────────────────────────────────────────────────────────────────────────
@@ -57,8 +57,8 @@ class RyanPlugins_CWWLITE_Admin {
 		foreach ( $columns as $key => $label ) {
 			$new[ $key ] = $label;
 			if ( 'order_status' === $key ) {
-				$new['cwwlite_network'] = __( 'Crypto Network', 'crypto-wallet-payment-for-woocommerce-lite' );
-				$new['cwwlite_txid']    = __( 'TX ID', 'crypto-wallet-payment-for-woocommerce-lite' );
+				$new['cwwlite_network'] = __( 'Crypto Network', 'cwwlite' );
+				$new['cwwlite_txid']    = __( 'TX ID', 'cwwlite' );
 			}
 		}
 		return $new;
@@ -72,7 +72,7 @@ class RyanPlugins_CWWLITE_Admin {
 	 */
 	public function render_order_column( $column, $order_or_id ) {
 		$order = is_object( $order_or_id ) ? $order_or_id : wc_get_order( $order_or_id );
-		if ( ! $order || $order->get_payment_method() !== 'ryanplugins_cwwlite_crypto' ) {
+		if ( ! $order || $order->get_payment_method() !== 'cwwlite_crypto' ) {
 			return;
 		}
 
@@ -87,7 +87,7 @@ class RyanPlugins_CWWLITE_Admin {
 			$txid        = $order->get_meta( '_cwwlite_txid' );
 			$network     = $order->get_meta( '_cwwlite_network' );
 			$environment = $order->get_meta( '_cwwlite_environment' ) ? $order->get_meta( '_cwwlite_environment' ) : 'mainnet';
-			$cfg         = RyanPlugins_CWWLITE_Gateway::$networks[ $network ] ?? array();
+			$cfg         = CWWLITE_Gateway::$networks[ $network ] ?? array();
 			$explorer    = 'testnet' === $environment
 				? ( $cfg['explorer_testnet'] ?? $cfg['explorer'] ?? '' )
 				: ( $cfg['explorer'] ?? '' );
@@ -95,12 +95,12 @@ class RyanPlugins_CWWLITE_Admin {
 			if ( ! empty( $txid ) ) {
 				$short = substr( $txid, 0, 12 ) . '…';
 				if ( $explorer ) {
-					echo '<a href="' . esc_url( ryanplugins_cwwlite_explorer_url( $explorer, $txid ) ) . '" target="_blank" title="' . esc_attr( $txid ) . '">' . esc_html( $short ) . '</a>';
+					echo '<a href="' . esc_url( cwwlite_explorer_url( $explorer, $txid ) ) . '" target="_blank" title="' . esc_attr( $txid ) . '">' . esc_html( $short ) . '</a>';
 				} else {
 					echo '<span title="' . esc_attr( $txid ) . '">' . esc_html( $short ) . '</span>';
 				}
 			} else {
-				echo '<em>' . esc_html__( 'Not provided', 'crypto-wallet-payment-for-woocommerce-lite' ) . '</em>';
+				echo '<em>' . esc_html__( 'Not provided', 'cwwlite' ) . '</em>';
 			}
 		}
 	}
@@ -117,7 +117,7 @@ class RyanPlugins_CWWLITE_Admin {
 		foreach ( $screens as $screen ) {
 			add_meta_box(
 				'cwwlite_order_meta',
-				__( 'Crypto Payment (Lite)', 'crypto-wallet-payment-for-woocommerce-lite' ),
+				__( 'Crypto Payment (Lite)', 'cwwlite' ),
 				array( $this, 'render_meta_box' ),
 				$screen,
 				'side',
@@ -136,8 +136,8 @@ class RyanPlugins_CWWLITE_Admin {
 			? $post_or_order
 			: wc_get_order( is_object( $post_or_order ) ? $post_or_order->ID : $post_or_order );
 
-		if ( ! $order || $order->get_payment_method() !== 'ryanplugins_cwwlite_crypto' ) {
-			echo '<p>' . esc_html__( 'This order was not paid via Crypto Wallet (Lite).', 'crypto-wallet-payment-for-woocommerce-lite' ) . '</p>';
+		if ( ! $order || $order->get_payment_method() !== 'cwwlite_crypto' ) {
+			echo '<p>' . esc_html__( 'This order was not paid via Crypto Wallet (Lite).', 'cwwlite' ) . '</p>';
 			return;
 		}
 
@@ -148,7 +148,7 @@ class RyanPlugins_CWWLITE_Admin {
 		$amount      = $order->get_meta( '_cwwlite_crypto_amount' );
 		$txid        = $order->get_meta( '_cwwlite_txid' );
 		$environment = $order->get_meta( '_cwwlite_environment' ) ? $order->get_meta( '_cwwlite_environment' ) : 'mainnet';
-		$cfg         = RyanPlugins_CWWLITE_Gateway::$networks[ $network ] ?? array();
+		$cfg         = CWWLITE_Gateway::$networks[ $network ] ?? array();
 		// Use testnet or mainnet explorer based on the environment saved at order time.
 		$explorer = 'testnet' === $environment
 			? ( $cfg['explorer_testnet'] ?? $cfg['explorer'] ?? '' )
@@ -157,21 +157,21 @@ class RyanPlugins_CWWLITE_Admin {
 		wp_nonce_field( 'cwwlite_save_meta_' . $order->get_id(), 'cwwlite_meta_nonce' );
 		?>
 		<table class="cwwlite-meta-table" style="width:100%;font-size:12px;">
-			<tr><th><?php esc_html_e( 'Network', 'crypto-wallet-payment-for-woocommerce-lite' ); ?></th><td><?php echo esc_html( $label ? $label : '—' ); ?></td></tr>
-			<tr><th><?php esc_html_e( 'Wallet', 'crypto-wallet-payment-for-woocommerce-lite' ); ?></th><td><code style="word-break:break-all;"><?php echo esc_html( $wallet ? $wallet : '—' ); ?></code></td></tr>
+			<tr><th><?php esc_html_e( 'Network', 'cwwlite' ); ?></th><td><?php echo esc_html( $label ? $label : '—' ); ?></td></tr>
+			<tr><th><?php esc_html_e( 'Wallet', 'cwwlite' ); ?></th><td><code style="word-break:break-all;"><?php echo esc_html( $wallet ? $wallet : '—' ); ?></code></td></tr>
 			<?php if ( $amount ) : ?>
-			<tr><th><?php esc_html_e( 'Amount', 'crypto-wallet-payment-for-woocommerce-lite' ); ?></th><td><?php echo esc_html( $amount . ' ' . $symbol ); ?></td></tr>
+			<tr><th><?php esc_html_e( 'Amount', 'cwwlite' ); ?></th><td><?php echo esc_html( $amount . ' ' . $symbol ); ?></td></tr>
 			<?php endif; ?>
 		</table>
 
-		<p style="margin-top:8px;"><label for="cwwlite_txid_admin"><strong><?php esc_html_e( 'TX ID:', 'crypto-wallet-payment-for-woocommerce-lite' ); ?></strong></label><br>
+		<p style="margin-top:8px;"><label for="cwwlite_txid_admin"><strong><?php esc_html_e( 'TX ID:', 'cwwlite' ); ?></strong></label><br>
 		<input type="text" id="cwwlite_txid_admin" name="cwwlite_txid_admin"
 				value="<?php echo esc_attr( $txid ); ?>"
 				style="width:100%;font-size:11px;" /></p>
 
 		<?php if ( $txid && $explorer ) : ?>
-			<p><a href="<?php echo esc_url( ryanplugins_cwwlite_explorer_url( $explorer, $txid ) ); ?>" target="_blank">
-				<?php esc_html_e( '🔗 View on block explorer', 'crypto-wallet-payment-for-woocommerce-lite' ); ?>
+			<p><a href="<?php echo esc_url( cwwlite_explorer_url( $explorer, $txid ) ); ?>" target="_blank">
+				<?php esc_html_e( '🔗 View on block explorer', 'cwwlite' ); ?>
 			</a></p>
 		<?php endif; ?>
 
@@ -181,11 +181,11 @@ class RyanPlugins_CWWLITE_Admin {
 					data-order-id="<?php echo esc_attr( $order->get_id() ); ?>"
 					data-nonce="<?php echo esc_attr( wp_create_nonce( 'cwwlite_verify_' . $order->get_id() ) ); ?>"
 					style="margin-top:6px;width:100%;">
-				<?php esc_html_e( '✅ Mark as Verified & Complete', 'crypto-wallet-payment-for-woocommerce-lite' ); ?>
+				<?php esc_html_e( '✅ Mark as Verified & Complete', 'cwwlite' ); ?>
 			</button>
-			<span class="cwwlite-verify-spinner" style="display:none;"> <?php esc_html_e( 'Updating…', 'crypto-wallet-payment-for-woocommerce-lite' ); ?></span>
+			<span class="cwwlite-verify-spinner" style="display:none;"> <?php esc_html_e( 'Updating…', 'cwwlite' ); ?></span>
 		<?php else : ?>
-			<p style="color:green;">✅ <?php /* translators: %s: WooCommerce order status label */ printf( esc_html__( 'Status: %s', 'crypto-wallet-payment-for-woocommerce-lite' ), esc_html( wc_get_order_status_name( $order->get_status() ) ) ); ?></p>
+			<p style="color:green;">✅ <?php /* translators: %s: WooCommerce order status label */ printf( esc_html__( 'Status: %s', 'cwwlite' ), esc_html( wc_get_order_status_name( $order->get_status() ) ) ); ?></p>
 		<?php endif; ?>
 		<?php
 	}
@@ -239,10 +239,10 @@ class RyanPlugins_CWWLITE_Admin {
 			wp_send_json_error( 'not_found' );
 		}
 
-		$gateway    = WC()->payment_gateways()->payment_gateways()['ryanplugins_cwwlite_crypto'] ?? null;
+		$gateway    = WC()->payment_gateways()->payment_gateways()['cwwlite_crypto'] ?? null;
 		$new_status = $gateway ? $gateway->get_option( 'verified_status', 'processing' ) : 'processing';
 
-		$order->update_status( $new_status, __( 'Manually marked as verified by admin (Crypto Wallet Lite).', 'crypto-wallet-payment-for-woocommerce-lite' ) );
+		$order->update_status( $new_status, __( 'Manually marked as verified by admin (Crypto Wallet Lite).', 'cwwlite' ) );
 		$order->update_meta_data( '_cwwlite_verified_by', 'manual' );
 		$order->update_meta_data( '_cwwlite_verified_at', current_time( 'mysql' ) );
 		$order->save();
@@ -268,16 +268,16 @@ class RyanPlugins_CWWLITE_Admin {
 		// ── Settings page: tabbed layout assets ───────────────────────────────
 		if ( $is_settings_page ) {
 			wp_enqueue_style(
-				'ryanplugins-cwwlite-settings',
-				RYANPLUGINS_CWWLITE_PLUGIN_URL . 'assets/css/settings.css',
+				'cwwlite-settings',
+				CWWLITE_PLUGIN_URL . 'assets/css/settings.css',
 				array(),
-				RYANPLUGINS_CWWLITE_VERSION
+				CWWLITE_VERSION
 			);
 			wp_enqueue_script(
-				'ryanplugins-cwwlite-settings',
-				RYANPLUGINS_CWWLITE_PLUGIN_URL . 'assets/js/settings.js',
+				'cwwlite-settings',
+				CWWLITE_PLUGIN_URL . 'assets/js/settings.js',
 				array(),
-				RYANPLUGINS_CWWLITE_VERSION,
+				CWWLITE_VERSION,
 				true // Load in footer.
 			);
 		}
@@ -285,23 +285,23 @@ class RyanPlugins_CWWLITE_Admin {
 		// ── Orders + settings page: admin utility styles ──────────────────────
 		if ( $is_order_page || $is_settings_page || is_admin() ) {
 			wp_enqueue_style(
-				'ryanplugins-cwwlite-admin',
-				RYANPLUGINS_CWWLITE_PLUGIN_URL . 'assets/css/admin.css',
+				'cwwlite-admin',
+				CWWLITE_PLUGIN_URL . 'assets/css/admin.css',
 				array(),
-				RYANPLUGINS_CWWLITE_VERSION
+				CWWLITE_VERSION
 			);
 		}
 
 		// ── Admin JS: orders page ──────────────────────────────────────────────
 		wp_enqueue_script(
-			'ryanplugins-cwwlite-admin',
-			RYANPLUGINS_CWWLITE_PLUGIN_URL . 'assets/js/admin.js',
+			'cwwlite-admin',
+			CWWLITE_PLUGIN_URL . 'assets/js/admin.js',
 			array( 'jquery' ),
-			RYANPLUGINS_CWWLITE_VERSION,
+			CWWLITE_VERSION,
 			true
 		);
 		wp_localize_script(
-			'ryanplugins-cwwlite-admin',
+			'cwwlite-admin',
 			'cwwliteAdmin',
 			array(
 				'ajaxUrl'      => admin_url( 'admin-ajax.php' ),
@@ -329,7 +329,7 @@ class RyanPlugins_CWWLITE_Admin {
 		// phpcs:disable WordPress.Security.NonceVerification.Recommended
 		$is_wc_settings = isset( $_GET['page'] ) && sanitize_key( $_GET['page'] ) === 'wc-settings'
 			&& isset( $_GET['tab'] ) && sanitize_key( $_GET['tab'] ) === 'checkout'
-			&& isset( $_GET['section'] ) && sanitize_key( $_GET['section'] ) === 'ryanplugins_cwwlite_crypto';
+			&& isset( $_GET['section'] ) && sanitize_key( $_GET['section'] ) === 'cwwlite_crypto';
         // phpcs:enable WordPress.Security.NonceVerification.Recommended
 
 		return $is_wc_settings;
@@ -382,14 +382,14 @@ class RyanPlugins_CWWLITE_Admin {
 				<!-- Text -->
 				<div class="cwwlite-notice-content">
 					<p class="cwwlite-notice-title">
-						<?php esc_html_e( 'Crypto Wallet Payment (Lite) is active', 'crypto-wallet-payment-for-woocommerce-lite' ); ?>
+						<?php esc_html_e( 'Crypto Wallet Payment (Lite) is active', 'cwwlite' ); ?>
 						<span class="cwwlite-notice-badge">
-							<?php esc_html_e( 'Upgrade Available', 'crypto-wallet-payment-for-woocommerce-lite' ); ?>
+							<?php esc_html_e( 'Upgrade Available', 'cwwlite' ); ?>
 						</span>
 					</p>
 					<p class="cwwlite-notice-text">
-						<?php esc_html_e( "You're on the free Lite plan — manual verification only.", 'crypto-wallet-payment-for-woocommerce-lite' ); ?>
-						<?php echo wp_kses( __( ' Upgrade to <strong>Pro</strong> for auto blockchain verification, browser wallet auto-send (Cardano wallets: Lace, Vespr, Eternl; WalletConnect: MetaMask; Solana wallets: Phantom, Solflare), stablecoins (USDT / USDC), fraud detection, refund workflow and more.', 'crypto-wallet-payment-for-woocommerce-lite' ), array( 'strong' => array() ) ); ?>
+						<?php esc_html_e( "You're on the free Lite plan — manual verification only.", 'cwwlite' ); ?>
+						<?php echo wp_kses( __( ' Upgrade to <strong>Pro</strong> for auto blockchain verification, browser wallet auto-send (Cardano wallets: Lace, Vespr, Eternl; WalletConnect: MetaMask; Solana wallets: Phantom, Solflare), stablecoins (USDT / USDC), fraud detection, refund workflow and more.', 'cwwlite' ), array( 'strong' => array() ) ); ?>
 					</p>
 				</div>
 
@@ -397,13 +397,13 @@ class RyanPlugins_CWWLITE_Admin {
 				<div class="cwwlite-notice-actions">
 					<a href="<?php echo esc_url( $pro_url ); ?>" target="_blank" rel="noopener"
 						class="cwwlite-notice-cta">
-						<?php esc_html_e( 'Get Pro →', 'crypto-wallet-payment-for-woocommerce-lite' ); ?>
+						<?php esc_html_e( 'Get Pro →', 'cwwlite' ); ?>
 					</a>
 					<a href="#"
 						id="cwwlite-dismiss-notice"
 						class="cwwlite-notice-dismiss-link"
 						data-nonce="<?php echo esc_attr( $nonce ); ?>">
-						<?php esc_html_e( 'Dismiss for 7 days', 'crypto-wallet-payment-for-woocommerce-lite' ); ?>
+						<?php esc_html_e( 'Dismiss for 7 days', 'cwwlite' ); ?>
 					</a>
 				</div>
 

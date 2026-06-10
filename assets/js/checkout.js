@@ -109,7 +109,7 @@
             url:    data.ajaxUrl,
             method: 'POST',
             data: {
-                action: 'ryanplugins_cwwlite_get_rates',
+                action: 'cwwlite_get_rates',
                 nonce:  data.nonce,
             },
             success: function ( resp ) {

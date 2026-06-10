@@ -2,13 +2,13 @@
 /**
  * WooCommerce payment gateway: Crypto Wallet Payment (Lite).
  *
- * @package RyanPlugins_CWWLITE
+ * @package CWWLITE
  */
 
 defined( 'ABSPATH' ) || exit;
 
 /**
- * RyanPlugins_CWWLITE_Gateway
+ * CWWLITE_Gateway
  *
  * Lite WooCommerce payment gateway for crypto.
  *
@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
  * — Manual TX submission only; admin verifies orders by hand.
  * — Live exchange rates via CoinGecko (no API key needed).
  */
-class RyanPlugins_CWWLITE_Gateway extends WC_Payment_Gateway {
+class CWWLITE_Gateway extends WC_Payment_Gateway {
 
 	/**
 	 * Payment instructions shown to the customer.
@@ -106,11 +106,11 @@ class RyanPlugins_CWWLITE_Gateway extends WC_Payment_Gateway {
 	 * Constructor. Set up gateway properties and register hooks.
 	 */
 	public function __construct() {
-		$this->id                 = 'ryanplugins_cwwlite_crypto';
+		$this->id                 = 'cwwlite_crypto';
 		$this->icon               = '';
 		$this->has_fields         = true;
-		$this->method_title       = __( 'Crypto Wallet Payment (Lite)', 'crypto-wallet-payment-for-woocommerce-lite' );
-		$this->method_description = __( 'Accept BTC, ETH, SOL and XRP. Manual verification — no API keys needed.', 'crypto-wallet-payment-for-woocommerce-lite' );
+		$this->method_title       = __( 'Crypto Wallet Payment (Lite)', 'cwwlite' );
+		$this->method_description = __( 'Accept BTC, ETH, SOL and XRP. Manual verification — no API keys needed.', 'cwwlite' );
 
 		$this->init_form_fields();
 		$this->init_settings();
@@ -128,12 +128,12 @@ class RyanPlugins_CWWLITE_Gateway extends WC_Payment_Gateway {
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_checkout_assets' ) );
 
 		// AJAX: live rates.
-		add_action( 'wp_ajax_ryanplugins_cwwlite_get_rates', array( $this, 'ajax_get_rates' ) );
-		add_action( 'wp_ajax_nopriv_ryanplugins_cwwlite_get_rates', array( $this, 'ajax_get_rates' ) );
+		add_action( 'wp_ajax_cwwlite_get_rates', array( $this, 'ajax_get_rates' ) );
+		add_action( 'wp_ajax_nopriv_cwwlite_get_rates', array( $this, 'ajax_get_rates' ) );
 
 		// AJAX: poll order status (customer polling).
-		add_action( 'wp_ajax_ryanplugins_cwwlite_order_status', array( $this, 'ajax_order_status' ) );
-		add_action( 'wp_ajax_nopriv_ryanplugins_cwwlite_order_status', array( $this, 'ajax_order_status' ) );
+		add_action( 'wp_ajax_cwwlite_order_status', array( $this, 'ajax_order_status' ) );
+		add_action( 'wp_ajax_nopriv_cwwlite_order_status', array( $this, 'ajax_order_status' ) );
 	}
 
 	// ─────────────────────────────────────────────────────────────────────────
@@ -148,104 +148,104 @@ class RyanPlugins_CWWLITE_Gateway extends WC_Payment_Gateway {
 
 			// ── General ──────────────────────────────────────────────────────
 			'enabled'            => array(
-				'title'   => __( 'Enable/Disable', 'crypto-wallet-payment-for-woocommerce-lite' ),
+				'title'   => __( 'Enable/Disable', 'cwwlite' ),
 				'type'    => 'checkbox',
-				'label'   => __( 'Enable Crypto Wallet Payment (Lite)', 'crypto-wallet-payment-for-woocommerce-lite' ),
+				'label'   => __( 'Enable Crypto Wallet Payment (Lite)', 'cwwlite' ),
 				'default' => 'yes',
 			),
 			'environment'        => array(
-				'title'       => __( 'Environment', 'crypto-wallet-payment-for-woocommerce-lite' ),
+				'title'       => __( 'Environment', 'cwwlite' ),
 				'type'        => 'select',
-				'description' => __( 'Mainnet processes real transactions. Testnet is for development and testing only — no real funds are transferred.', 'crypto-wallet-payment-for-woocommerce-lite' ),
+				'description' => __( 'Mainnet processes real transactions. Testnet is for development and testing only — no real funds are transferred.', 'cwwlite' ),
 				'default'     => 'mainnet',
 				'desc_tip'    => true,
 				'options'     => array(
-					'mainnet' => __( 'Mainnet (Live)', 'crypto-wallet-payment-for-woocommerce-lite' ),
-					'testnet' => __( 'Testnet (Testing)', 'crypto-wallet-payment-for-woocommerce-lite' ),
+					'mainnet' => __( 'Mainnet (Live)', 'cwwlite' ),
+					'testnet' => __( 'Testnet (Testing)', 'cwwlite' ),
 				),
 			),
 			'title'              => array(
-				'title'       => __( 'Payment Title', 'crypto-wallet-payment-for-woocommerce-lite' ),
+				'title'       => __( 'Payment Title', 'cwwlite' ),
 				'type'        => 'text',
-				'description' => __( 'Title shown at checkout.', 'crypto-wallet-payment-for-woocommerce-lite' ),
-				'default'     => __( 'Pay with Crypto (BTC / ETH / SOL / XRP)', 'crypto-wallet-payment-for-woocommerce-lite' ),
+				'description' => __( 'Title shown at checkout.', 'cwwlite' ),
+				'default'     => __( 'Pay with Crypto (BTC / ETH / SOL / XRP)', 'cwwlite' ),
 				'desc_tip'    => true,
 			),
 			'description'        => array(
-				'title'   => __( 'Description', 'crypto-wallet-payment-for-woocommerce-lite' ),
+				'title'   => __( 'Description', 'cwwlite' ),
 				'type'    => 'textarea',
-				'default' => __( 'Pay with cryptocurrency. Your order is confirmed once we manually verify your transaction.', 'crypto-wallet-payment-for-woocommerce-lite' ),
+				'default' => __( 'Pay with cryptocurrency. Your order is confirmed once we manually verify your transaction.', 'cwwlite' ),
 			),
 			'instructions'       => array(
-				'title'   => __( 'Thank You Page Instructions', 'crypto-wallet-payment-for-woocommerce-lite' ),
+				'title'   => __( 'Thank You Page Instructions', 'cwwlite' ),
 				'type'    => 'textarea',
-				'default' => __( 'Please send the exact crypto amount shown to the wallet address below. Paste your transaction ID and we will confirm your order within 24 hours.', 'crypto-wallet-payment-for-woocommerce-lite' ),
+				'default' => __( 'Please send the exact crypto amount shown to the wallet address below. Paste your transaction ID and we will confirm your order within 24 hours.', 'cwwlite' ),
 			),
 			'exchange_rate_note' => array(
-				'title'    => __( 'Exchange Rate Note', 'crypto-wallet-payment-for-woocommerce-lite' ),
+				'title'    => __( 'Exchange Rate Note', 'cwwlite' ),
 				'type'     => 'text',
-				'default'  => __( 'Crypto amount is approximate. Please send the displayed amount.', 'crypto-wallet-payment-for-woocommerce-lite' ),
+				'default'  => __( 'Crypto amount is approximate. Please send the displayed amount.', 'cwwlite' ),
 				'desc_tip' => true,
 			),
 			'hold_message'       => array(
-				'title'   => __( 'On-Hold Order Message', 'crypto-wallet-payment-for-woocommerce-lite' ),
+				'title'   => __( 'On-Hold Order Message', 'cwwlite' ),
 				'type'    => 'textarea',
-				'default' => __( 'Your order is on hold pending crypto payment verification. We will update your order once we confirm your transaction.', 'crypto-wallet-payment-for-woocommerce-lite' ),
+				'default' => __( 'Your order is on hold pending crypto payment verification. We will update your order once we confirm your transaction.', 'cwwlite' ),
 			),
 
 			// ── Networks ─────────────────────────────────────────────────────
 			'networks_section'   => array(
-				'title'       => __( 'Wallet Addresses', 'crypto-wallet-payment-for-woocommerce-lite' ),
+				'title'       => __( 'Wallet Addresses', 'cwwlite' ),
 				'type'        => 'title',
-				'description' => __( 'Enter your wallet addresses for each network you want to accept. Leave blank to hide a network at checkout.', 'crypto-wallet-payment-for-woocommerce-lite' ),
+				'description' => __( 'Enter your wallet addresses for each network you want to accept. Leave blank to hide a network at checkout.', 'cwwlite' ),
 			),
 			'wallet_bitcoin'     => array(
-				'title'       => __( 'Bitcoin (BTC) Address', 'crypto-wallet-payment-for-woocommerce-lite' ),
+				'title'       => __( 'Bitcoin (BTC) Address', 'cwwlite' ),
 				'type'        => 'text',
-				'description' => __( 'Your mainnet BTC wallet address.', 'crypto-wallet-payment-for-woocommerce-lite' ),
+				'description' => __( 'Your mainnet BTC wallet address.', 'cwwlite' ),
 				'default'     => '',
 				'desc_tip'    => true,
 			),
 			'wallet_ethereum'    => array(
-				'title'       => __( 'Ethereum (ETH) Address', 'crypto-wallet-payment-for-woocommerce-lite' ),
+				'title'       => __( 'Ethereum (ETH) Address', 'cwwlite' ),
 				'type'        => 'text',
-				'description' => __( 'Your mainnet ETH wallet address (0x…).', 'crypto-wallet-payment-for-woocommerce-lite' ),
+				'description' => __( 'Your mainnet ETH wallet address (0x…).', 'cwwlite' ),
 				'default'     => '',
 				'desc_tip'    => true,
 			),
 			'wallet_solana'      => array(
-				'title'       => __( 'Solana (SOL) Address', 'crypto-wallet-payment-for-woocommerce-lite' ),
+				'title'       => __( 'Solana (SOL) Address', 'cwwlite' ),
 				'type'        => 'text',
-				'description' => __( 'Your mainnet SOL wallet address.', 'crypto-wallet-payment-for-woocommerce-lite' ),
+				'description' => __( 'Your mainnet SOL wallet address.', 'cwwlite' ),
 				'default'     => '',
 				'desc_tip'    => true,
 			),
 			'wallet_xrp'         => array(
-				'title'       => __( 'XRP Address', 'crypto-wallet-payment-for-woocommerce-lite' ),
+				'title'       => __( 'XRP Address', 'cwwlite' ),
 				'type'        => 'text',
-				'description' => __( 'Your mainnet XRP wallet address.', 'crypto-wallet-payment-for-woocommerce-lite' ),
+				'description' => __( 'Your mainnet XRP wallet address.', 'cwwlite' ),
 				'default'     => '',
 				'desc_tip'    => true,
 			),
 
 			// ── Order status ──────────────────────────────────────────────────
 			'verified_status'    => array(
-				'title'       => __( 'Manually Verified Order Status', 'crypto-wallet-payment-for-woocommerce-lite' ),
+				'title'       => __( 'Manually Verified Order Status', 'cwwlite' ),
 				'type'        => 'select',
-				'description' => __( 'Order status to set when you manually mark a transaction as verified in the admin.', 'crypto-wallet-payment-for-woocommerce-lite' ),
+				'description' => __( 'Order status to set when you manually mark a transaction as verified in the admin.', 'cwwlite' ),
 				'default'     => 'processing',
 				'desc_tip'    => true,
 				'options'     => array(
-					'processing' => __( 'Processing', 'crypto-wallet-payment-for-woocommerce-lite' ),
-					'completed'  => __( 'Completed', 'crypto-wallet-payment-for-woocommerce-lite' ),
+					'processing' => __( 'Processing', 'cwwlite' ),
+					'completed'  => __( 'Completed', 'cwwlite' ),
 				),
 			),
 
 			// ── Rate Lock ─────────────────────────────────────────────────────
 			'rate_lock_minutes'  => array(
-				'title'             => __( 'Rate Valid For (minutes)', 'crypto-wallet-payment-for-woocommerce-lite' ),
+				'title'             => __( 'Rate Valid For (minutes)', 'cwwlite' ),
 				'type'              => 'number',
-				'description'       => __( 'How many minutes the quoted crypto amount stays locked. 0 disables the countdown timer.', 'crypto-wallet-payment-for-woocommerce-lite' ),
+				'description'       => __( 'How many minutes the quoted crypto amount stays locked. 0 disables the countdown timer.', 'cwwlite' ),
 				'default'           => '15',
 				'desc_tip'          => true,
 				'custom_attributes' => array(
@@ -276,63 +276,63 @@ class RyanPlugins_CWWLITE_Gateway extends WC_Payment_Gateway {
 		$all_missing = ( count( self::$networks ) === $missing_wallets );
 		$is_testnet  = $this->is_testnet();
 		?>
-		<div id="ryanplugins-cwwlite-settings-wrap">
+		<div id="cwwlite-settings-wrap">
 			<input type="hidden"
-					name="ryanplugins_cwwlite_active_tab"
-					id="ryanplugins-cwwlite-active-tab-input"
+					name="cwwlite_active_tab"
+					id="cwwlite-active-tab-input"
 					value="general" />
 
 			<!-- ── Tab nav ───────────────────────────────────────────────── -->
-			<div class="ryanplugins-cwwlite-nav-tabs" role="tablist">
+			<div class="cwwlite-nav-tabs" role="tablist">
 
 				<button type="button"
-						class="ryanplugins-cwwlite-nav-tab ryanplugins-cwwlite-nav-tab-active"
+						class="cwwlite-nav-tab cwwlite-nav-tab-active"
 						data-tab="general"
 						role="tab" aria-selected="true"
-						aria-controls="ryanplugins-cwwlite-panel-general">
-					<?php esc_html_e( '⚙ General', 'crypto-wallet-payment-for-woocommerce-lite' ); ?>
+						aria-controls="cwwlite-panel-general">
+					<?php esc_html_e( '⚙ General', 'cwwlite' ); ?>
 					<?php if ( $is_testnet ) : ?>
-						<span class="ryanplugins-cwwlite-tab-badge ryanplugins-cwwlite-tab-badge-testnet"
-							title="<?php esc_attr_e( 'Testnet mode active', 'crypto-wallet-payment-for-woocommerce-lite' ); ?>">
+						<span class="cwwlite-tab-badge cwwlite-tab-badge-testnet"
+							title="<?php esc_attr_e( 'Testnet mode active', 'cwwlite' ); ?>">
 							TEST
 						</span>
 					<?php endif; ?>
 				</button>
 
 				<button type="button"
-						class="ryanplugins-cwwlite-nav-tab"
+						class="cwwlite-nav-tab"
 						data-tab="networks"
 						role="tab" aria-selected="false"
-						aria-controls="ryanplugins-cwwlite-panel-networks">
-					<?php esc_html_e( '🔗 Networks & Wallets', 'crypto-wallet-payment-for-woocommerce-lite' ); ?>
+						aria-controls="cwwlite-panel-networks">
+					<?php esc_html_e( '🔗 Networks & Wallets', 'cwwlite' ); ?>
 					<?php if ( $all_missing ) : ?>
-						<span class="ryanplugins-cwwlite-tab-badge ryanplugins-cwwlite-tab-badge-warn"
-							title="<?php esc_attr_e( 'No wallets configured', 'crypto-wallet-payment-for-woocommerce-lite' ); ?>">!</span>
+						<span class="cwwlite-tab-badge cwwlite-tab-badge-warn"
+							title="<?php esc_attr_e( 'No wallets configured', 'cwwlite' ); ?>">!</span>
 					<?php elseif ( $missing_wallets > 0 ) : ?>
-						<span class="ryanplugins-cwwlite-tab-badge ryanplugins-cwwlite-tab-badge-warn"
-							title="<?php /* translators: %d: number of crypto networks without a wallet address configured */ echo esc_attr( sprintf( __( '%d network(s) not set', 'crypto-wallet-payment-for-woocommerce-lite' ), $missing_wallets ) ); ?>">
+						<span class="cwwlite-tab-badge cwwlite-tab-badge-warn"
+							title="<?php /* translators: %d: number of crypto networks without a wallet address configured */ echo esc_attr( sprintf( __( '%d network(s) not set', 'cwwlite' ), $missing_wallets ) ); ?>">
 							<?php echo esc_html( $missing_wallets ); ?>
 						</span>
 					<?php endif; ?>
 				</button>
 
-			</div><!-- .ryanplugins-cwwlite-nav-tabs -->
+			</div><!-- .cwwlite-nav-tabs -->
 
 			<!-- ── Tab: General ──────────────────────────────────────────── -->
-			<div class="ryanplugins-cwwlite-tab-panel ryanplugins-cwwlite-tab-panel-active"
-				id="ryanplugins-cwwlite-panel-general"
+			<div class="cwwlite-tab-panel cwwlite-tab-panel-active"
+				id="cwwlite-panel-general"
 				role="tabpanel">
 
 				<?php if ( $is_testnet ) : ?>
 				<div class="cwwlite-testnet-admin-banner">
 					<span class="cwwlite-testnet-icon">🧪</span>
-					<strong><?php esc_html_e( 'Testnet Mode Active', 'crypto-wallet-payment-for-woocommerce-lite' ); ?></strong>
-					— <?php esc_html_e( 'No real funds will be transferred. Switch to Mainnet before going live.', 'crypto-wallet-payment-for-woocommerce-lite' ); ?>
+					<strong><?php esc_html_e( 'Testnet Mode Active', 'cwwlite' ); ?></strong>
+					— <?php esc_html_e( 'No real funds will be transferred. Switch to Mainnet before going live.', 'cwwlite' ); ?>
 				</div>
 				<?php endif; ?>
 
-				<div class="ryanplugins-cwwlite-section-heading">
-					<?php esc_html_e( 'GENERAL SETTINGS', 'crypto-wallet-payment-for-woocommerce-lite' ); ?>
+				<div class="cwwlite-section-heading">
+					<?php esc_html_e( 'GENERAL SETTINGS', 'cwwlite' ); ?>
 				</div>
 				<table class="form-table">
 				<?php
@@ -343,8 +343,8 @@ class RyanPlugins_CWWLITE_Gateway extends WC_Payment_Gateway {
 				?>
 				</table>
 
-				<div class="ryanplugins-cwwlite-section-heading" style="margin-top:20px;">
-					<?php esc_html_e( 'ORDER SETTINGS', 'crypto-wallet-payment-for-woocommerce-lite' ); ?>
+				<div class="cwwlite-section-heading" style="margin-top:20px;">
+					<?php esc_html_e( 'ORDER SETTINGS', 'cwwlite' ); ?>
 				</div>
 				<table class="form-table">
 				<?php
@@ -355,18 +355,18 @@ class RyanPlugins_CWWLITE_Gateway extends WC_Payment_Gateway {
 				?>
 				</table>
 
-			</div><!-- #ryanplugins-cwwlite-panel-general -->
+			</div><!-- #cwwlite-panel-general -->
 
 			<!-- ── Tab: Networks & Wallets ───────────────────────────────── -->
-			<div class="ryanplugins-cwwlite-tab-panel"
-				id="ryanplugins-cwwlite-panel-networks"
+			<div class="cwwlite-tab-panel"
+				id="cwwlite-panel-networks"
 				role="tabpanel" hidden>
 
-				<div class="ryanplugins-cwwlite-section-heading">
-					<?php esc_html_e( 'WALLET ADDRESSES', 'crypto-wallet-payment-for-woocommerce-lite' ); ?>
+				<div class="cwwlite-section-heading">
+					<?php esc_html_e( 'WALLET ADDRESSES', 'cwwlite' ); ?>
 				</div>
 				<p class="description" style="margin-bottom:16px;">
-					<?php esc_html_e( 'Enter your wallet address for each network you want to accept. Leave blank to hide that network at checkout.', 'crypto-wallet-payment-for-woocommerce-lite' ); ?>
+					<?php esc_html_e( 'Enter your wallet address for each network you want to accept. Leave blank to hide that network at checkout.', 'cwwlite' ); ?>
 				</p>
 				<table class="form-table">
 				<?php
@@ -377,16 +377,16 @@ class RyanPlugins_CWWLITE_Gateway extends WC_Payment_Gateway {
 				?>
 				</table>
 
-			</div><!-- #ryanplugins-cwwlite-panel-networks -->
+			</div><!-- #cwwlite-panel-networks -->
 
 			<!-- ── Save button — rendered inside WC's outer form ────────── -->
-			<p class="ryanplugins-cwwlite-submit" id="ryanplugins-cwwlite-save-btn-row">
+			<p class="cwwlite-submit" id="cwwlite-save-btn-row">
 				<button type="submit" name="save" value="Save changes" class="button-primary">
-					<?php esc_html_e( 'Save changes', 'crypto-wallet-payment-for-woocommerce-lite' ); ?>
+					<?php esc_html_e( 'Save changes', 'cwwlite' ); ?>
 				</button>
 			</p>
 
-		</div><!-- #ryanplugins-cwwlite-settings-wrap -->
+		</div><!-- #cwwlite-settings-wrap -->
 		<?php
 	}
 
@@ -399,7 +399,7 @@ class RyanPlugins_CWWLITE_Gateway extends WC_Payment_Gateway {
 		$this->process_admin_options();
 		// Bust rate cache on save.
 		foreach ( array( 'usd', 'eur', 'gbp', 'php', 'jpy', 'aud', 'cad' ) as $cur ) {
-			delete_transient( 'ryanplugins_cwwlite_live_rates_' . $cur );
+			delete_transient( 'cwwlite_live_rates_' . $cur );
 		}
 	}
 
@@ -414,10 +414,10 @@ class RyanPlugins_CWWLITE_Gateway extends WC_Payment_Gateway {
 		$networks  = $this->get_enabled_networks();
 		$amounts   = $this->get_crypto_display_amounts( $networks );
 		$rate_lock = absint( $this->get_option( 'rate_lock_minutes', 15 ) );
-		$img_url   = RYANPLUGINS_CWWLITE_PLUGIN_URL . 'assets/img/';
+		$img_url   = CWWLITE_PLUGIN_URL . 'assets/img/';
 
 		if ( empty( $networks ) ) {
-			echo '<p class="cwwlite-no-networks">' . esc_html__( 'No crypto networks are configured yet. Please contact the store owner.', 'crypto-wallet-payment-for-woocommerce-lite' ) . '</p>';
+			echo '<p class="cwwlite-no-networks">' . esc_html__( 'No crypto networks are configured yet. Please contact the store owner.', 'cwwlite' ) . '</p>';
 			return;
 		}
 
@@ -429,8 +429,8 @@ class RyanPlugins_CWWLITE_Gateway extends WC_Payment_Gateway {
 			<?php if ( $this->is_testnet() ) : ?>
 			<div class="cwwlite-testnet-checkout-banner">
 				<span>🧪</span>
-				<strong><?php esc_html_e( 'Testnet Mode', 'crypto-wallet-payment-for-woocommerce-lite' ); ?></strong>
-				— <?php esc_html_e( 'This is a test environment. Do not send real funds.', 'crypto-wallet-payment-for-woocommerce-lite' ); ?>
+				<strong><?php esc_html_e( 'Testnet Mode', 'cwwlite' ); ?></strong>
+				— <?php esc_html_e( 'This is a test environment. Do not send real funds.', 'cwwlite' ); ?>
 			</div>
 			<?php endif; ?>
 
@@ -439,9 +439,9 @@ class RyanPlugins_CWWLITE_Gateway extends WC_Payment_Gateway {
 			<?php endif; ?>
 
 			<!-- ── Network pill selector ─────────────────────────────────── -->
-			<p class="cwwlite-select-label"><?php esc_html_e( 'Select network:', 'crypto-wallet-payment-for-woocommerce-lite' ); ?></p>
+			<p class="cwwlite-select-label"><?php esc_html_e( 'Select network:', 'cwwlite' ); ?></p>
 
-			<div class="cwwlite-pill-selector" role="group" aria-label="<?php esc_attr_e( 'Select cryptocurrency', 'crypto-wallet-payment-for-woocommerce-lite' ); ?>">
+			<div class="cwwlite-pill-selector" role="group" aria-label="<?php esc_attr_e( 'Select cryptocurrency', 'cwwlite' ); ?>">
 				<?php
 				foreach ( $networks as $key => $cfg ) :
 					$icon_file = $img_url . esc_attr( $cfg['icon'] ) . '.svg';
@@ -468,7 +468,7 @@ class RyanPlugins_CWWLITE_Gateway extends WC_Payment_Gateway {
 			<?php if ( $rate_lock > 0 ) : ?>
 			<div class="cwwlite-rate-bar">
 				<span class="cwwlite-rate-bar-icon">⏱</span>
-				<?php esc_html_e( 'Rate valid for:', 'crypto-wallet-payment-for-woocommerce-lite' ); ?>
+				<?php esc_html_e( 'Rate valid for:', 'cwwlite' ); ?>
 				<span class="cwwlite-countdown cwwlite-countdown-highlight"
 						data-seconds="<?php echo esc_attr( $rate_lock * 60 ); ?>">
 					<?php echo esc_html( sprintf( '%d:00', $rate_lock ) ); ?>
@@ -485,19 +485,19 @@ class RyanPlugins_CWWLITE_Gateway extends WC_Payment_Gateway {
 			<div class="cwwlite-network-panel" id="cwwlite-panel-<?php echo esc_attr( $key ); ?>"<?php echo ( '' === $hidden ) ? '' : ' style="display:none;"'; ?>>
 
 				<!-- Manual Transfer card -->
-				<p class="cwwlite-pay-method-label"><?php esc_html_e( 'How would you like to pay?', 'crypto-wallet-payment-for-woocommerce-lite' ); ?></p>
+				<p class="cwwlite-pay-method-label"><?php esc_html_e( 'How would you like to pay?', 'cwwlite' ); ?></p>
 				<div class="cwwlite-method-cards">
 					<div class="cwwlite-method-card cwwlite-method-card-active">
 						<span class="cwwlite-method-icon">📋</span>
-						<strong><?php esc_html_e( 'Manual Transfer', 'crypto-wallet-payment-for-woocommerce-lite' ); ?></strong>
-						<span class="cwwlite-method-sub"><?php esc_html_e( 'Copy address &amp; send', 'crypto-wallet-payment-for-woocommerce-lite' ); ?></span>
+						<strong><?php esc_html_e( 'Manual Transfer', 'cwwlite' ); ?></strong>
+						<span class="cwwlite-method-sub"><?php esc_html_e( 'Copy address &amp; send', 'cwwlite' ); ?></span>
 					</div>
 				</div>
 
 				<!-- Wallet address -->
 				<div class="cwwlite-address-box">
 					<div class="cwwlite-address-row">
-						<span class="cwwlite-address-label"><?php esc_html_e( 'Send to:', 'crypto-wallet-payment-for-woocommerce-lite' ); ?></span>
+						<span class="cwwlite-address-label"><?php esc_html_e( 'Send to:', 'cwwlite' ); ?></span>
 						<?php if ( $amount ) : ?>
 						<span class="cwwlite-amount-badge">
 							<?php echo esc_html( $amount . ' ' . $cfg['symbol'] ); ?>
@@ -509,9 +509,9 @@ class RyanPlugins_CWWLITE_Gateway extends WC_Payment_Gateway {
 						<button type="button"
 								class="cwwlite-copy-btn"
 								data-copy="<?php echo esc_attr( $wallet ); ?>"
-								aria-label="<?php esc_attr_e( 'Copy address', 'crypto-wallet-payment-for-woocommerce-lite' ); ?>">
+								aria-label="<?php esc_attr_e( 'Copy address', 'cwwlite' ); ?>">
 							<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-							<?php esc_html_e( 'Copy', 'crypto-wallet-payment-for-woocommerce-lite' ); ?>
+							<?php esc_html_e( 'Copy', 'cwwlite' ); ?>
 						</button>
 					</div>
 					<?php if ( $this->exchange_rate_note ) : ?>
@@ -522,14 +522,14 @@ class RyanPlugins_CWWLITE_Gateway extends WC_Payment_Gateway {
 				<!-- TX ID field -->
 				<div class="cwwlite-txid-wrap">
 					<label for="cwwlite_txid_<?php echo esc_attr( $key ); ?>" class="cwwlite-txid-label">
-						<?php esc_html_e( 'Transaction ID / Hash', 'crypto-wallet-payment-for-woocommerce-lite' ); ?>
-						<span class="cwwlite-optional"><?php esc_html_e( '(optional)', 'crypto-wallet-payment-for-woocommerce-lite' ); ?></span>
+						<?php esc_html_e( 'Transaction ID / Hash', 'cwwlite' ); ?>
+						<span class="cwwlite-optional"><?php esc_html_e( '(optional)', 'cwwlite' ); ?></span>
 					</label>
 					<input type="text"
 							id="cwwlite_txid_<?php echo esc_attr( $key ); ?>"
 							name="cwwlite_txid"
 							class="cwwlite-txid-input"
-							placeholder="<?php esc_attr_e( 'Paste your TX hash here — you can also submit later', 'crypto-wallet-payment-for-woocommerce-lite' ); ?>"
+							placeholder="<?php esc_attr_e( 'Paste your TX hash here — you can also submit later', 'cwwlite' ); ?>"
 							autocomplete="off" />
 				</div>
 
@@ -557,24 +557,24 @@ class RyanPlugins_CWWLITE_Gateway extends WC_Payment_Gateway {
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( empty( $network ) || ! array_key_exists( $network, self::$networks ) ) {
-			wc_add_notice( __( 'Please select a cryptocurrency network.', 'crypto-wallet-payment-for-woocommerce-lite' ), 'error' );
+			wc_add_notice( __( 'Please select a cryptocurrency network.', 'cwwlite' ), 'error' );
 			return false;
 		}
 
 		$enabled = $this->get_enabled_networks();
 		if ( ! array_key_exists( $network, $enabled ) ) {
-			wc_add_notice( __( 'The selected network is not available. Please choose another.', 'crypto-wallet-payment-for-woocommerce-lite' ), 'error' );
+			wc_add_notice( __( 'The selected network is not available. Please choose another.', 'cwwlite' ), 'error' );
 			return false;
 		}
 
 		// TX ID is optional but if supplied do a basic sanity check.
 		if ( ! empty( $txid ) ) {
 			if ( strlen( $txid ) < 10 || strlen( $txid ) > 200 ) {
-				wc_add_notice( __( 'The transaction ID looks invalid. Please double-check it.', 'crypto-wallet-payment-for-woocommerce-lite' ), 'error' );
+				wc_add_notice( __( 'The transaction ID looks invalid. Please double-check it.', 'cwwlite' ), 'error' );
 				return false;
 			}
 			if ( ! preg_match( '/^[a-zA-Z0-9]+$/', $txid ) ) {
-				wc_add_notice( __( 'Transaction ID should only contain letters and numbers.', 'crypto-wallet-payment-for-woocommerce-lite' ), 'error' );
+				wc_add_notice( __( 'Transaction ID should only contain letters and numbers.', 'cwwlite' ), 'error' );
 				return false;
 			}
 		}
@@ -601,7 +601,7 @@ class RyanPlugins_CWWLITE_Gateway extends WC_Payment_Gateway {
 
 		$cfg = self::$networks[ $network ] ?? null;
 		if ( ! $cfg ) {
-			wc_add_notice( __( 'Invalid network selected.', 'crypto-wallet-payment-for-woocommerce-lite' ), 'error' );
+			wc_add_notice( __( 'Invalid network selected.', 'cwwlite' ), 'error' );
 			return array( 'result' => 'failure' );
 		}
 
@@ -628,7 +628,7 @@ class RyanPlugins_CWWLITE_Gateway extends WC_Payment_Gateway {
 		$order->save();
 
 		// Place on hold.
-		$hold_note = $this->hold_message ? $this->hold_message : __( 'Order on hold pending crypto payment verification.', 'crypto-wallet-payment-for-woocommerce-lite' );
+		$hold_note = $this->hold_message ? $this->hold_message : __( 'Order on hold pending crypto payment verification.', 'cwwlite' );
 		$order->update_status( 'on-hold', $hold_note );
 
 		// Reduce stock.
@@ -673,17 +673,17 @@ class RyanPlugins_CWWLITE_Gateway extends WC_Payment_Gateway {
 		?>
 		<div class="cwwlite-thankyou">
 			<h3>
-				<?php esc_html_e( 'Complete Your Crypto Payment', 'crypto-wallet-payment-for-woocommerce-lite' ); ?>
+				<?php esc_html_e( 'Complete Your Crypto Payment', 'cwwlite' ); ?>
 				<?php if ( $is_testnet ) : ?>
-					<span class="cwwlite-testnet-badge"><?php esc_html_e( 'TESTNET', 'crypto-wallet-payment-for-woocommerce-lite' ); ?></span>
+					<span class="cwwlite-testnet-badge"><?php esc_html_e( 'TESTNET', 'cwwlite' ); ?></span>
 				<?php endif; ?>
 			</h3>
 
 			<?php if ( $is_testnet ) : ?>
 			<div class="cwwlite-testnet-checkout-banner">
 				<span>🧪</span>
-				<strong><?php esc_html_e( 'Testnet Mode', 'crypto-wallet-payment-for-woocommerce-lite' ); ?></strong>
-				— <?php esc_html_e( 'This is a test environment. Do not send real funds.', 'crypto-wallet-payment-for-woocommerce-lite' ); ?>
+				<strong><?php esc_html_e( 'Testnet Mode', 'cwwlite' ); ?></strong>
+				— <?php esc_html_e( 'This is a test environment. Do not send real funds.', 'cwwlite' ); ?>
 			</div>
 			<?php endif; ?>
 
@@ -693,25 +693,25 @@ class RyanPlugins_CWWLITE_Gateway extends WC_Payment_Gateway {
 
 			<table class="cwwlite-payment-summary">
 				<tr>
-					<th><?php esc_html_e( 'Network', 'crypto-wallet-payment-for-woocommerce-lite' ); ?></th>
+					<th><?php esc_html_e( 'Network', 'cwwlite' ); ?></th>
 					<td><?php echo esc_html( $label ); ?></td>
 				</tr>
 				<?php if ( $amount ) : ?>
 				<tr>
-					<th><?php esc_html_e( 'Amount to Send', 'crypto-wallet-payment-for-woocommerce-lite' ); ?></th>
+					<th><?php esc_html_e( 'Amount to Send', 'cwwlite' ); ?></th>
 					<td><strong><?php echo esc_html( $amount . ' ' . $symbol ); ?></strong></td>
 				</tr>
 				<?php endif; ?>
 				<tr>
-					<th><?php esc_html_e( 'Send To Address', 'crypto-wallet-payment-for-woocommerce-lite' ); ?></th>
+					<th><?php esc_html_e( 'Send To Address', 'cwwlite' ); ?></th>
 					<td><code><?php echo esc_html( $wallet ); ?></code></td>
 				</tr>
 				<?php if ( $txid ) : ?>
 				<tr>
-					<th><?php esc_html_e( 'TX ID Submitted', 'crypto-wallet-payment-for-woocommerce-lite' ); ?></th>
+					<th><?php esc_html_e( 'TX ID Submitted', 'cwwlite' ); ?></th>
 					<td>
 						<?php if ( ! empty( $explorer ) ) : ?>
-							<a href="<?php echo esc_url( ryanplugins_cwwlite_explorer_url( $explorer, $txid ) ); ?>" target="_blank">
+							<a href="<?php echo esc_url( cwwlite_explorer_url( $explorer, $txid ) ); ?>" target="_blank">
 								<?php echo esc_html( $txid ); ?>
 							</a>
 						<?php else : ?>
@@ -723,7 +723,7 @@ class RyanPlugins_CWWLITE_Gateway extends WC_Payment_Gateway {
 			</table>
 
 			<p class="cwwlite-awaiting-notice">
-				<?php esc_html_e( 'Once you have sent the payment, paste your transaction ID on the order page if you have not already. We will manually verify and update your order status.', 'crypto-wallet-payment-for-woocommerce-lite' ); ?>
+				<?php esc_html_e( 'Once you have sent the payment, paste your transaction ID on the order page if you have not already. We will manually verify and update your order status.', 'cwwlite' ); ?>
 			</p>
 		</div>
 		<?php
@@ -761,13 +761,13 @@ class RyanPlugins_CWWLITE_Gateway extends WC_Payment_Gateway {
 			}
 			echo esc_html( $wallet ) . "\n";
 		} else {
-			echo '<h3>' . esc_html__( 'Crypto Payment Instructions', 'crypto-wallet-payment-for-woocommerce-lite' ) . '</h3>';
+			echo '<h3>' . esc_html__( 'Crypto Payment Instructions', 'cwwlite' ) . '</h3>';
 			echo '<p>' . wp_kses_post( $this->instructions ) . '</p>';
-			echo '<p><strong>' . esc_html__( 'Network:', 'crypto-wallet-payment-for-woocommerce-lite' ) . '</strong> ' . esc_html( $label ) . '</p>';
+			echo '<p><strong>' . esc_html__( 'Network:', 'cwwlite' ) . '</strong> ' . esc_html( $label ) . '</p>';
 			if ( $amount ) {
-				echo '<p><strong>' . esc_html__( 'Amount:', 'crypto-wallet-payment-for-woocommerce-lite' ) . '</strong> ' . esc_html( $amount . ' ' . $symbol ) . '</p>';
+				echo '<p><strong>' . esc_html__( 'Amount:', 'cwwlite' ) . '</strong> ' . esc_html( $amount . ' ' . $symbol ) . '</p>';
 			}
-			echo '<p><strong>' . esc_html__( 'Send to:', 'crypto-wallet-payment-for-woocommerce-lite' ) . '</strong> <code>' . esc_html( $wallet ) . '</code></p>';
+			echo '<p><strong>' . esc_html__( 'Send to:', 'cwwlite' ) . '</strong> <code>' . esc_html( $wallet ) . '</code></p>';
 		}
 	}
 
@@ -779,7 +779,7 @@ class RyanPlugins_CWWLITE_Gateway extends WC_Payment_Gateway {
 	 * AJAX handler: return live exchange rates.
 	 */
 	public function ajax_get_rates() {
-		check_ajax_referer( 'ryanplugins_cwwlite_checkout', 'nonce' );
+		check_ajax_referer( 'cwwlite_checkout', 'nonce' );
 		wp_send_json_success( $this->get_live_rates() );
 	}
 
@@ -790,7 +790,7 @@ class RyanPlugins_CWWLITE_Gateway extends WC_Payment_Gateway {
 	 */
 	public function get_live_rates(): array {
 		$currency  = strtolower( get_woocommerce_currency() );
-		$cache_key = 'ryanplugins_cwwlite_live_rates_' . $currency;
+		$cache_key = 'cwwlite_live_rates_' . $currency;
 		$cached    = get_transient( $cache_key );
 		if ( false !== $cached ) {
 			return $cached;
@@ -829,7 +829,7 @@ class RyanPlugins_CWWLITE_Gateway extends WC_Payment_Gateway {
 	 * AJAX handler: return current order payment status.
 	 */
 	public function ajax_order_status() {
-		check_ajax_referer( 'ryanplugins_cwwlite_checkout', 'nonce' );
+		check_ajax_referer( 'cwwlite_checkout', 'nonce' );
 		$order_id = absint( $_POST['order_id'] ?? 0 );
 		if ( ! $order_id ) {
 			wp_send_json_error( 'invalid' );
@@ -859,17 +859,17 @@ class RyanPlugins_CWWLITE_Gateway extends WC_Payment_Gateway {
 		}
 
 		wp_enqueue_style(
-			'ryanplugins-cwwlite-checkout',
-			RYANPLUGINS_CWWLITE_PLUGIN_URL . 'assets/css/checkout.css',
+			'cwwlite-checkout',
+			CWWLITE_PLUGIN_URL . 'assets/css/checkout.css',
 			array(),
-			RYANPLUGINS_CWWLITE_VERSION
+			CWWLITE_VERSION
 		);
 
 		wp_enqueue_script(
-			'ryanplugins-cwwlite-checkout',
-			RYANPLUGINS_CWWLITE_PLUGIN_URL . 'assets/js/checkout.js',
+			'cwwlite-checkout',
+			CWWLITE_PLUGIN_URL . 'assets/js/checkout.js',
 			array( 'jquery' ),
-			RYANPLUGINS_CWWLITE_VERSION,
+			CWWLITE_VERSION,
 			true
 		);
 
@@ -878,11 +878,11 @@ class RyanPlugins_CWWLITE_Gateway extends WC_Payment_Gateway {
 		$rate_lock = absint( $this->get_option( 'rate_lock_minutes', 15 ) );
 
 		wp_localize_script(
-			'ryanplugins-cwwlite-checkout',
+			'cwwlite-checkout',
 			'cwwliteData',
 			array(
 				'gatewayId'   => $this->id,
-				'nonce'       => wp_create_nonce( 'ryanplugins_cwwlite_checkout' ),
+				'nonce'       => wp_create_nonce( 'cwwlite_checkout' ),
 				'ajaxUrl'     => admin_url( 'admin-ajax.php' ),
 				'networks'    => $enabled,
 				'amounts'     => $amounts,

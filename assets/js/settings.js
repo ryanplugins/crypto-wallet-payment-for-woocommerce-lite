@@ -12,7 +12,7 @@
 (function () {
     'use strict';
 
-    var PREFIX  = 'ryanplugins-cwwlite';
+    var PREFIX  = 'cwwlite';
     var STORAGE = PREFIX + '-active-tab';
     var wrap    = document.getElementById( PREFIX + '-settings-wrap' );
 

@@ -2,7 +2,7 @@
 /**
  * WooCommerce Blocks integration for the Crypto Wallet Lite payment method.
  *
- * @package RyanPlugins_CWWLITE
+ * @package CWWLITE
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -10,24 +10,24 @@ defined( 'ABSPATH' ) || exit;
 use Automattic\WooCommerce\Blocks\Payments\Integrations\AbstractPaymentMethodType;
 
 /**
- * RyanPlugins_CWWLITE_Blocks
+ * CWWLITE_Blocks
  *
  * WooCommerce Block Checkout integration for the Lite gateway.
  */
-class RyanPlugins_CWWLITE_Blocks extends AbstractPaymentMethodType {
+class CWWLITE_Blocks extends AbstractPaymentMethodType {
 
 	/**
 	 * Payment method name.
 	 *
 	 * @var string
 	 */
-	protected $name = 'ryanplugins_cwwlite_crypto';
+	protected $name = 'cwwlite_crypto';
 
 	/**
 	 * Initialize the Blocks integration by loading settings.
 	 */
 	public function initialize() {
-		$this->settings = get_option( 'woocommerce_ryanplugins_cwwlite_crypto_settings', array() );
+		$this->settings = get_option( 'woocommerce_cwwlite_crypto_settings', array() );
 	}
 
 	/**
@@ -45,21 +45,21 @@ class RyanPlugins_CWWLITE_Blocks extends AbstractPaymentMethodType {
 	 * @return array
 	 */
 	public function get_payment_method_script_handles(): array {
-		$handle = 'ryanplugins-cwwlite-blocks';
+		$handle = 'cwwlite-blocks';
 
 		// Enqueue checkout CSS for the block checkout page.
 		wp_enqueue_style(
-			'ryanplugins-cwwlite-checkout',
-			RYANPLUGINS_CWWLITE_PLUGIN_URL . 'assets/css/checkout.css',
+			'cwwlite-checkout',
+			CWWLITE_PLUGIN_URL . 'assets/css/checkout.css',
 			array(),
-			RYANPLUGINS_CWWLITE_VERSION
+			CWWLITE_VERSION
 		);
 
 		wp_register_script(
 			$handle,
-			RYANPLUGINS_CWWLITE_PLUGIN_URL . 'assets/js/blocks-lite.js',
+			CWWLITE_PLUGIN_URL . 'assets/js/blocks-lite.js',
 			array( 'wc-blocks-registry', 'wc-settings', 'wp-element', 'wp-i18n' ),
-			RYANPLUGINS_CWWLITE_VERSION,
+			CWWLITE_VERSION,
 			true
 		);
 		return array( $handle );
@@ -84,16 +84,16 @@ class RyanPlugins_CWWLITE_Blocks extends AbstractPaymentMethodType {
 		}
 
 		return array(
-			'title'              => $this->settings['title'] ?? __( 'Pay with Crypto (Lite)', 'crypto-wallet-payment-for-woocommerce-lite' ),
+			'title'              => $this->settings['title'] ?? __( 'Pay with Crypto (Lite)', 'cwwlite' ),
 			'description'        => $this->settings['description'] ?? '',
 			'exchange_rate_note' => $this->settings['exchange_rate_note'] ?? '',
 			'networks'           => $networks,
 			'wallets'            => $wallets,
 			'amounts'            => $amounts,
 			'rateLockSec'        => $rate_lock * 60,
-			'imgUrl'             => RYANPLUGINS_CWWLITE_PLUGIN_URL . 'assets/img/',
+			'imgUrl'             => CWWLITE_PLUGIN_URL . 'assets/img/',
 			'ajaxUrl'            => admin_url( 'admin-ajax.php' ),
-			'nonce'              => wp_create_nonce( 'ryanplugins_cwwlite_checkout' ),
+			'nonce'              => wp_create_nonce( 'cwwlite_checkout' ),
 			'supports'           => array( 'products' ),
 		);
 	}

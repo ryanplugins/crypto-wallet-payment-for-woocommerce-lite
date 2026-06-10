@@ -8,7 +8,7 @@
  * Note: Order meta (_cwwlite_*) is intentionally preserved
  * so that existing order records remain complete after uninstall.
  *
- * @package RyanPlugins_CWWLITE
+ * @package CWWLITE
  */
 
 if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
@@ -16,12 +16,12 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 }
 
 // ── 1. Delete gateway settings ─────────────────────────────────────────────
-delete_option( 'woocommerce_ryanplugins_cwwlite_crypto_settings' );
+delete_option( 'woocommerce_cwwlite_crypto_settings' );
 
 // ── 2. Delete cached exchange rates ───────────────────────────────────────
-$ryanplugins_cwwlite_uninstall_currencies = array( 'usd', 'eur', 'gbp', 'php', 'jpy', 'aud', 'cad', 'sgd', 'inr', 'brl' );
-foreach ( $ryanplugins_cwwlite_uninstall_currencies as $ryanplugins_cwwlite_uninstall_currency ) {
-	delete_transient( 'ryanplugins_cwwlite_live_rates_' . $ryanplugins_cwwlite_uninstall_currency );
+$cwwlite_uninstall_currencies = array( 'usd', 'eur', 'gbp', 'php', 'jpy', 'aud', 'cad', 'sgd', 'inr', 'brl' );
+foreach ( $cwwlite_uninstall_currencies as $cwwlite_uninstall_currency ) {
+	delete_transient( 'cwwlite_live_rates_' . $cwwlite_uninstall_currency );
 }
 
 // ── 3. Delete per-user upgrade notice dismissal timestamp ─────────────────
