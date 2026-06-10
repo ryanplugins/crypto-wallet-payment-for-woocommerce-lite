@@ -390,8 +390,6 @@ class CWWLITE_Gateway extends WC_Payment_Gateway {
 		<?php
 	}
 
-
-
 	/**
 	 * Process admin settings save and clear rate cache.
 	 */
@@ -482,7 +480,7 @@ class CWWLITE_Gateway extends WC_Payment_Gateway {
 				$wallet = $this->get_option( 'wallet_' . $key );
 				$amount = $amounts[ $key ] ?? '';
 				?>
-			<div class="cwwlite-network-panel" id="cwwlite-panel-<?php echo esc_attr( $key ); ?>"<?php echo ( '' === $hidden ) ? '' : ' style="display:none;"'; ?>>
+			<div class="cwwlite-network-panel" id="cwwlite-panel-<?php echo esc_attr( $key ); ?>"<?php echo ( $key !== $first_key ) ? ' style="display:none;"' : ''; ?>>
 
 				<!-- Manual Transfer card -->
 				<p class="cwwlite-pay-method-label"><?php esc_html_e( 'How would you like to pay?', 'crypto-wallet-payment-for-woocommerce-lite' ); ?></p>
@@ -594,6 +592,10 @@ class CWWLITE_Gateway extends WC_Payment_Gateway {
 	 */
 	public function process_payment( $order_id ): array {
 		$order = wc_get_order( $order_id );
+		if ( ! $order ) {
+			wc_add_notice( __( 'Order not found. Please try again.', 'crypto-wallet-payment-for-woocommerce-lite' ), 'error' );
+			return array( 'result' => 'failure' );
+		}
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- nonce verified by WooCommerce checkout.
 		$network = sanitize_key( wp_unslash( $_POST['cwwlite_network'] ?? '' ) );
 		$txid    = sanitize_text_field( wp_unslash( $_POST['cwwlite_txid'] ?? '' ) );
@@ -772,7 +774,7 @@ class CWWLITE_Gateway extends WC_Payment_Gateway {
 	}
 
 	// ─────────────────────────────────────────────────────────────────────────
-	// AJAX: live rates
+	// AJAX: live rates.
 	// ─────────────────────────────────────────────────────────────────────────
 
 	/**
@@ -838,6 +840,20 @@ class CWWLITE_Gateway extends WC_Payment_Gateway {
 		$order = wc_get_order( $order_id );
 		if ( ! $order ) {
 			wp_send_json_error( 'not_found' );
+		}
+
+		// Ownership check: only the order's customer or an admin can poll status.
+		$customer_id = $order->get_customer_id();
+		if ( is_user_logged_in() ) {
+			if ( $customer_id && get_current_user_id() !== $customer_id && ! current_user_can( 'manage_woocommerce' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown
+				wp_send_json_error( 'forbidden' );
+			}
+		} else {
+			// Guest: only allow polling for a short window after checkout (5 min).
+			$order_date = $order->get_date_created() ? $order->get_date_created()->getTimestamp() : 0;
+			if ( $order_date && ( time() - $order_date ) > 300 ) {
+				wp_send_json_error( 'forbidden' );
+			}
 		}
 
 		wp_send_json_success( array( 'status' => $order->get_status() ) );

@@ -1,21 +1,21 @@
 <?php
 /**
- * Plugin Name: Crypto Wallet Payment for WooCommerce
- * Plugin URI:  https://ryanplugins.net
- * Description: Accept BTC, ETH, SOL and XRP payments in WooCommerce. Manual TX verification, live exchange rates via CoinGecko.
- * Version:     1.0.0
- * Author:      RyanPlugins
- * Author URI:  https://profiles.wordpress.org/ryanplugins/
- * License:     GPL-2.0+
- * License URI: https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain: crypto-wallet-payment-for-woocommerce-lite
- * Domain Path: /languages
+ * Plugin Name:       Crypto Wallet Payment for WooCommerce
+ * Plugin URI:        https://ryanplugins.net
+ * Description:       Accept BTC, ETH, SOL and XRP payments in WooCommerce. Manual TX verification, live exchange rates via CoinGecko.
+ * Version:           1.0.0
+ * Author:            RyanPlugins
+ * Author URI:        https://profiles.wordpress.org/ryanplugins/
+ * License:           GPL-2.0+
+ * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
+ * Text Domain:       crypto-wallet-payment-for-woocommerce-lite
+ * Domain Path:       /languages
+ * Requires at least: 5.8
+ * Requires PHP:      7.4
+ * WC requires at least: 6.0
+ * WC tested up to:   10.6
  *
  * @package CWWLITE
- * Requires at least: 5.8
- * Requires PHP: 7.4
- * WC requires at least: 6.0
- * WC tested up to: 10.6
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -171,7 +171,7 @@ function cwwlite_action_links( $links ) {
  * Show admin notice when WooCommerce is not active.
  */
 function cwwlite_missing_wc_notice() {
-	echo '<div class="error"><p><strong>Crypto Wallet Payment (Lite)</strong> requires WooCommerce to be installed and active.</p></div>';
+	echo '<div class="error"><p><strong>Crypto Wallet Payment</strong> requires WooCommerce to be installed and active.</p></div>';
 }
 
 // ── HPOS / Blocks compatibility declarations ──────────────────────────────────

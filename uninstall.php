@@ -3,7 +3,7 @@
  * Uninstall — Crypto Wallet Payment for WooCommerce
  *
  * Runs when the plugin is deleted from WP Admin → Plugins.
- * Removes all plugin options and per-user dismissal meta.
+ * Removes all plugin options and cached transients.
  *
  * Note: Order meta (_cwwlite_*) is intentionally preserved
  * so that existing order records remain complete after uninstall.
@@ -23,5 +23,3 @@ $cwwlite_uninstall_currencies = array( 'usd', 'eur', 'gbp', 'php', 'jpy', 'aud',
 foreach ( $cwwlite_uninstall_currencies as $cwwlite_uninstall_currency ) {
 	delete_transient( 'cwwlite_live_rates_' . $cwwlite_uninstall_currency );
 }
-
-// ── 3. Delete per-user upgrade notice dismissal timestamp ─────────────────

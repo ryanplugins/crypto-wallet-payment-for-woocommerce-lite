@@ -38,11 +38,21 @@ CoinGecko Privacy Policy: https://www.coingecko.com/en/privacy
 * WooCommerce Block Checkout (Gutenberg) support
 * HPOS (High-Performance Order Storage) compatible
 * Tabbed settings page with live wallet status chips
-* Dismissible admin upgrade notice
 
 = Privacy =
 
 This plugin does not collect, store, or transmit any personal data beyond what WooCommerce already stores as part of the order. The only external HTTP request made is to the CoinGecko public API to retrieve exchange rates. No user identifiable data is included in that request.
+
+
+== Installation ==
+
+1. Upload the `crypto-wallet-payment-for-woocommerce-lite` folder to `/wp-content/plugins/`.
+2. Activate the plugin through the **Plugins → Installed Plugins** screen.
+3. Go to **WooCommerce → Settings → Payments → Crypto Wallet Payment** and enable the gateway.
+4. Enter your wallet address for each network you want to accept.
+5. Save changes — the crypto payment method is now live at checkout.
+
+== Frequently Asked Questions ==
 
 = Does this plugin require an API key? =
 No. Exchange rates are fetched from CoinGecko's free public API. No account or API key is needed.
@@ -50,7 +60,7 @@ No. Exchange rates are fetched from CoinGecko's free public API. No account or A
 = Does it require KYC or a payment processor account? =
 No. Payments go directly to your wallet. No third-party account, KYC, or custodial service is involved.
 
-= Which cryptocurrencies are supported in the ? =
+= Which cryptocurrencies are supported? =
 Bitcoin (BTC), Ethereum (ETH), Solana (SOL), and XRP.
 
 = How does manual verification work? =
@@ -61,9 +71,6 @@ Yes. Both Classic and Block Checkout are fully supported.
 
 = Is it HPOS compatible? =
 Yes. The plugin is fully compatible with WooCommerce High-Performance Order Storage.
-
-= Can I use it alongside the Pro version? =
-Yes. All functions, classes, and options use the `cwwlite` prefix to avoid conflicts.
 
 == Changelog ==
 

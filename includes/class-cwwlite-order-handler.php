@@ -170,10 +170,10 @@ class CWWLITE_Order_Handler {
 				wc_add_notice( __( 'You are not allowed to update this order.', 'crypto-wallet-payment-for-woocommerce-lite' ), 'error' );
 				return;
 			}
-		} else {
-			$billing_email = $order->get_billing_email();
-			// Allow unauthenticated guests arriving from the order-received page.
 		}
+		// Guest: the nonce (cwwlite_submit_txid_{order_id}) provides sufficient
+		// verification — it was generated server-side for this specific order
+		// and is only accessible from the order-received page.
 
 		$txid = sanitize_text_field( wp_unslash( $_POST['cwwlite_txid_value'] ?? '' ) );
 		if ( empty( $txid ) ) {
@@ -238,7 +238,15 @@ class CWWLITE_Order_Handler {
 
 			$total_rows['cwwlite_txid'] = array(
 				'label' => __( 'TX ID:', 'crypto-wallet-payment-for-woocommerce-lite' ),
-				'value' => $tx_display,
+				'value' => wp_kses(
+					$tx_display,
+					array(
+						'a' => array(
+							'href'   => array(),
+							'target' => array(),
+						),
+					)
+				),
 			);
 		}
 

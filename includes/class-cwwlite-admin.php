@@ -1,6 +1,6 @@
 <?php
 /**
- * Admin class: order columns, meta box, assets, and upgrade notice.
+ * Admin class: order columns, meta box, and assets.
  *
  * @package CWWLITE
  */
@@ -20,7 +20,7 @@ class CWWLITE_Admin {
 	 * Constructor. Register all admin hooks.
 	 */
 	public function __construct() {
-		// Orders list columns..
+		// Orders list columns.
 		add_filter( 'manage_woocommerce_page_wc-orders_columns', array( $this, 'add_order_columns' ) );
 		add_filter( 'manage_edit-shop_order_columns', array( $this, 'add_order_columns' ) );
 		add_action( 'manage_woocommerce_page_wc-orders_custom_column', array( $this, 'render_order_column' ), 10, 2 );
@@ -279,7 +279,7 @@ class CWWLITE_Admin {
 		}
 
 		// ── Orders + settings page: admin utility styles ──────────────────────
-		if ( $is_order_page || $is_settings_page || is_admin() ) {
+		if ( $is_order_page || $is_settings_page ) {
 			wp_enqueue_style(
 				'cwwlite-admin',
 				CWWLITE_PLUGIN_URL . 'assets/css/admin.css',
@@ -288,25 +288,27 @@ class CWWLITE_Admin {
 			);
 		}
 
-		// ── Admin JS: orders page ──────────────────────────────────────────────
-		wp_enqueue_script(
-			'cwwlite-admin',
-			CWWLITE_PLUGIN_URL . 'assets/js/admin.js',
-			array( 'jquery' ),
-			CWWLITE_VERSION,
-			true
-		);
-		wp_localize_script(
-			'cwwlite-admin',
-			'cwwliteAdmin',
-			array(
-				'ajaxUrl' => admin_url( 'admin-ajax.php' ),
-			)
-		);
+		// ── Admin JS: orders + settings pages only ───────────────────────────────
+		if ( $is_order_page || $is_settings_page ) {
+			wp_enqueue_script(
+				'cwwlite-admin',
+				CWWLITE_PLUGIN_URL . 'assets/js/admin.js',
+				array( 'jquery' ),
+				CWWLITE_VERSION,
+				true
+			);
+			wp_localize_script(
+				'cwwlite-admin',
+				'cwwliteAdmin',
+				array(
+					'ajaxUrl' => admin_url( 'admin-ajax.php' ),
+				)
+			);
+		}
 	}
 
 	// ─────────────────────────────────────────────────────────────────────────
-	// Admin assets — ensure CSS+JS load on the gateway settings page too
+	// Helpers.
 	// ─────────────────────────────────────────────────────────────────────────
 
 	/**
@@ -328,21 +330,5 @@ class CWWLITE_Admin {
         // phpcs:enable WordPress.Security.NonceVerification.Recommended
 
 		return $is_wc_settings;
-	}
-
-
-	// ─────────────────────────────────────────────────────────────────────────
-	// AJAX: record dismissal timestamp (notice returns after 7 days)
-	// ─────────────────────────────────────────────────────────────────────────
-
-	/**
-	 * AJAX handler: record notice dismissal timestamp.
-	 */
-	public function ajax_dismiss_notice() {
-		if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ?? '' ) ), 'cwwlite_dismiss_notice' ) ) {
-			wp_send_json_error( 'nonce' );
-		}
-		update_user_meta( get_current_user_id(), 'cwwlite_upgrade_notice_dismissed_at', time() );
-		wp_send_json_success();
 	}
 }
