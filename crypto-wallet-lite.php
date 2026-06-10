@@ -8,7 +8,7 @@
  * Author URI:  https://profiles.wordpress.org/ryanplugins/
  * License:     GPL-2.0+
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain: cwwlite
+ * Text Domain: crypto-wallet-payment-for-woocommerce-lite
  * Domain Path: /languages
  *
  * @package CWWLITE
@@ -163,7 +163,7 @@ add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), 'cwwlite_actio
  */
 function cwwlite_action_links( $links ) {
 	$settings_url = admin_url( 'admin.php?page=wc-settings&tab=checkout&section=cwwlite_crypto' );
-	array_unshift( $links, '<a href="' . esc_url( $settings_url ) . '">' . esc_html__( 'Settings', 'cwwlite' ) . '</a>' );
+	array_unshift( $links, '<a href="' . esc_url( $settings_url ) . '">' . esc_html__( 'Settings', 'crypto-wallet-payment-for-woocommerce-lite' ) . '</a>' );
 	return $links;
 }
 
