@@ -1,4 +1,10 @@
 <?php
+/**
+ * WooCommerce Blocks integration for the Crypto Wallet Lite payment method.
+ *
+ * @package RyanPlugins_CWWLITE
+ */
+
 defined( 'ABSPATH' ) || exit;
 
 use Automattic\WooCommerce\Blocks\Payments\Integrations\AbstractPaymentMethodType;
@@ -10,66 +16,94 @@ use Automattic\WooCommerce\Blocks\Payments\Integrations\AbstractPaymentMethodTyp
  */
 class RyanPlugins_CWWLITE_Blocks extends AbstractPaymentMethodType {
 
-    protected $name = 'ryanplugins_cwwlite_crypto';
+	/**
+	 * Payment method name.
+	 *
+	 * @var string
+	 */
+	protected $name = 'ryanplugins_cwwlite_crypto';
 
-    public function initialize() {
-        $this->settings = get_option( 'woocommerce_ryanplugins_cwwlite_crypto_settings', [] );
-    }
+	/**
+	 * Initialize the Blocks integration by loading settings.
+	 */
+	public function initialize() {
+		$this->settings = get_option( 'woocommerce_ryanplugins_cwwlite_crypto_settings', array() );
+	}
 
-    public function is_active(): bool {
-        return ! empty( $this->settings['enabled'] ) && $this->settings['enabled'] === 'yes';
-    }
+	/**
+	 * Check if the payment method is active.
+	 *
+	 * @return bool
+	 */
+	public function is_active(): bool {
+		return ! empty( $this->settings['enabled'] ) && 'yes' === $this->settings['enabled'];
+	}
 
-    public function get_payment_method_script_handles(): array {
-        $handle = 'ryanplugins-cwwlite-blocks';
+	/**
+	 * Return script handles for the payment method.
+	 *
+	 * @return array
+	 */
+	public function get_payment_method_script_handles(): array {
+		$handle = 'ryanplugins-cwwlite-blocks';
 
-        // Enqueue checkout CSS for the block checkout page
-        wp_enqueue_style(
-            'ryanplugins-cwwlite-checkout',
-            RyanPlugins_CWWLITE_PLUGIN_URL . 'assets/css/checkout.css',
-            [],
-            RyanPlugins_CWWLITE_VERSION
-        );
+		// Enqueue checkout CSS for the block checkout page.
+		wp_enqueue_style(
+			'ryanplugins-cwwlite-checkout',
+			RYANPLUGINS_CWWLITE_PLUGIN_URL . 'assets/css/checkout.css',
+			array(),
+			RYANPLUGINS_CWWLITE_VERSION
+		);
 
-        wp_register_script(
-            $handle,
-            RyanPlugins_CWWLITE_PLUGIN_URL . 'assets/js/blocks-lite.js',
-            [ 'wc-blocks-registry', 'wc-settings', 'wp-element', 'wp-i18n' ],
-            RyanPlugins_CWWLITE_VERSION,
-            true
-        );
-        return [ $handle ];
-    }
+		wp_register_script(
+			$handle,
+			RYANPLUGINS_CWWLITE_PLUGIN_URL . 'assets/js/blocks-lite.js',
+			array( 'wc-blocks-registry', 'wc-settings', 'wp-element', 'wp-i18n' ),
+			RYANPLUGINS_CWWLITE_VERSION,
+			true
+		);
+		return array( $handle );
+	}
 
-    public function get_payment_method_data(): array {
-        $gateway = WC()->payment_gateways()->payment_gateways()[ $this->name ] ?? null;
+	/**
+	 * Return data passed to the JS payment method.
+	 *
+	 * @return array
+	 */
+	public function get_payment_method_data(): array {
+		$gateway = WC()->payment_gateways()->payment_gateways()[ $this->name ] ?? null;
 
-        $networks  = $gateway ? $gateway->get_enabled_networks() : [];
-        $amounts   = ( $gateway && ! empty( $networks ) ) ? $gateway->get_crypto_display_amounts( $networks ) : [];
-        $rate_lock = absint( $this->settings['rate_lock_minutes'] ?? 15 );
+		$networks  = $gateway ? $gateway->get_enabled_networks() : array();
+		$amounts   = ( $gateway && ! empty( $networks ) ) ? $gateway->get_crypto_display_amounts( $networks ) : array();
+		$rate_lock = absint( $this->settings['rate_lock_minutes'] ?? 15 );
 
-        // Build wallet map keyed by network
-        $wallets = [];
-        foreach ( array_keys( $networks ) as $key ) {
-            $wallets[ $key ] = $gateway ? $gateway->get_option( 'wallet_' . $key ) : '';
-        }
+		// Build wallet map keyed by network.
+		$wallets = array();
+		foreach ( array_keys( $networks ) as $key ) {
+			$wallets[ $key ] = $gateway ? $gateway->get_option( 'wallet_' . $key ) : '';
+		}
 
-        return [
-            'title'              => $this->settings['title']              ?? __( 'Pay with Crypto (Lite)', 'crypto-wallet-payment-for-woocommerce-lite' ),
-            'description'        => $this->settings['description']        ?? '',
-            'exchange_rate_note' => $this->settings['exchange_rate_note'] ?? '',
-            'networks'           => $networks,
-            'wallets'            => $wallets,
-            'amounts'            => $amounts,
-            'rateLockSec'        => $rate_lock * 60,
-            'imgUrl'             => RyanPlugins_CWWLITE_PLUGIN_URL . 'assets/img/',
-            'ajaxUrl'            => admin_url( 'admin-ajax.php' ),
-            'nonce'              => wp_create_nonce( 'ryanplugins_cwwlite_checkout' ),
-            'supports'           => [ 'products' ],
-        ];
-    }
+		return array(
+			'title'              => $this->settings['title'] ?? __( 'Pay with Crypto (Lite)', 'crypto-wallet-payment-for-woocommerce-lite' ),
+			'description'        => $this->settings['description'] ?? '',
+			'exchange_rate_note' => $this->settings['exchange_rate_note'] ?? '',
+			'networks'           => $networks,
+			'wallets'            => $wallets,
+			'amounts'            => $amounts,
+			'rateLockSec'        => $rate_lock * 60,
+			'imgUrl'             => RYANPLUGINS_CWWLITE_PLUGIN_URL . 'assets/img/',
+			'ajaxUrl'            => admin_url( 'admin-ajax.php' ),
+			'nonce'              => wp_create_nonce( 'ryanplugins_cwwlite_checkout' ),
+			'supports'           => array( 'products' ),
+		);
+	}
 
-    public function get_payment_method_script_handles_for_admin(): array {
-        return $this->get_payment_method_script_handles();
-    }
+	/**
+	 * Return script handles for admin context.
+	 *
+	 * @return array
+	 */
+	public function get_payment_method_script_handles_for_admin(): array {
+		return $this->get_payment_method_script_handles();
+	}
 }

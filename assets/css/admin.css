@@ -37,23 +37,131 @@
 }
 
 /* ── Admin Notice — Upgrade to Pro ───────────────────────────────────────────── */
-/*
- * Critical layout/colour styles live as inline style="" in the PHP so no
- * external stylesheet can override them. This file only handles pseudo-states
- * and the WP native × button, which inline styles cannot express.
- */
 
-/* CTA button hover */
-#cwwlite-upgrade-notice .notice-cta:hover {
-    transform: translateY(-1px) !important;
-    box-shadow: 0 4px 16px rgba(247,151,30,.65) !important;
-    opacity: .95;
+#cwwlite-upgrade-notice {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%);
+    border: none;
+    border-left: 4px solid #f7971e;
+    border-radius: 0 6px 6px 0;
+    padding: 0;
+    margin: 5px 20px 20px 2px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, .18);
+    overflow: hidden;
+    position: relative;
 }
 
-/* Dismiss text link hover */
-#cwwlite-upgrade-notice .notice-dismiss-link:hover {
-    color: #c8d6e5 !important;
-    text-decoration: underline !important;
+.cwwlite-notice-inner {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 48px 14px 18px;
+    flex-wrap: wrap;
+    box-sizing: border-box;
+}
+
+.cwwlite-notice-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    min-width: 42px;
+    background: linear-gradient(135deg, #f7971e, #ffd200);
+    border-radius: 50%;
+    font-size: 20px;
+    line-height: 1;
+    box-shadow: 0 2px 8px rgba(255, 210, 0, .4);
+    flex-shrink: 0;
+}
+
+.cwwlite-notice-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.cwwlite-notice-title {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0 0 4px;
+    padding: 0;
+    font-size: 13.5px;
+    font-weight: 700;
+    color: #fff;
+    background: none;
+    border: none;
+    line-height: 1.3;
+}
+
+.cwwlite-notice-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #e65c00, #f9d423);
+    color: #1a1a2e;
+    font-size: 9px;
+    font-weight: 800;
+    padding: 2px 7px;
+    border-radius: 20px;
+    letter-spacing: .8px;
+    text-transform: uppercase;
+    vertical-align: middle;
+}
+
+.cwwlite-notice-text {
+    color: #9daec0;
+    font-size: 12px;
+    margin: 0;
+    line-height: 1.6;
+}
+
+.cwwlite-notice-text strong {
+    color: #c8d6e5;
+    font-weight: 600;
+}
+
+.cwwlite-notice-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+}
+
+.cwwlite-notice-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: linear-gradient(135deg, #f7971e 0%, #ffd200 100%);
+    color: #1a1a2e;
+    font-weight: 700;
+    font-size: 12px;
+    padding: 8px 18px;
+    border-radius: 5px;
+    text-decoration: none;
+    box-shadow: 0 2px 8px rgba(247, 151, 30, .45);
+    white-space: nowrap;
+    border: none;
+}
+
+.cwwlite-notice-cta:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(247, 151, 30, .65);
+    opacity: .95;
+    color: #1a1a2e;
+}
+
+.cwwlite-notice-dismiss-link {
+    color: #7f8fa0;
+    font-size: 11px;
+    text-decoration: none;
+    white-space: nowrap;
+    border: none;
+    background: none;
+}
+
+.cwwlite-notice-dismiss-link:hover {
+    color: #c8d6e5;
+    text-decoration: underline;
 }
 
 /* WP native × button — vertically centred, gold on hover */

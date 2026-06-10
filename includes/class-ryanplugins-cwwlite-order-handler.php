@@ -1,4 +1,10 @@
 <?php
+/**
+ * Handles order payment submission (customer TX ID form).
+ *
+ * @package RyanPlugins_CWWLITE
+ */
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -8,207 +14,265 @@ defined( 'ABSPATH' ) || exit;
  */
 class RyanPlugins_CWWLITE_Order_Handler {
 
-    public function __construct() {
-        add_action( 'woocommerce_order_details_after_order_table', [ $this, 'txid_update_form' ] );
-        add_action( 'init',                                        [ $this, 'handle_txid_submission' ] );
-        add_filter( 'woocommerce_get_order_item_totals',           [ $this, 'add_txid_to_order_table' ], 10, 2 );
-        add_action( 'woocommerce_order_details_after_order_table', [ $this, 'verification_status_notice' ], 2 );
-        add_action( 'woocommerce_order_details_after_order_table', [ $this, 'retry_payment_button' ], 5 );
-    }
+	/**
+	 * Constructor. Register hooks.
+	 */
+	public function __construct() {
+		add_action( 'woocommerce_order_details_after_order_table', array( $this, 'txid_update_form' ) );
+		add_action( 'init', array( $this, 'handle_txid_submission' ) );
+		add_filter( 'woocommerce_get_order_item_totals', array( $this, 'add_txid_to_order_table' ), 10, 2 );
+		add_action( 'woocommerce_order_details_after_order_table', array( $this, 'verification_status_notice' ), 2 );
+		add_action( 'woocommerce_order_details_after_order_table', array( $this, 'retry_payment_button' ), 5 );
+	}
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // Retry button
-    // ─────────────────────────────────────────────────────────────────────────
+	// ─────────────────────────────────────────────────────────────────────────
+	// Retry button.
+	// ─────────────────────────────────────────────────────────────────────────
 
-    public function retry_payment_button( $order ) {
-        if ( $order->get_payment_method() !== 'ryanplugins_cwwlite_crypto' ) return;
-        if ( ! in_array( $order->get_status(), [ 'on-hold', 'pending' ], true ) ) return;
-        if ( ! is_user_logged_in() ) return;
-        if ( $order->get_customer_id() && $order->get_customer_id() !== get_current_user_id() ) return;
+	/**
+	 * Show a retry payment button on the order detail page.
+	 *
+	 * @param WC_Order $order The order object.
+	 */
+	public function retry_payment_button( $order ) {
+		if ( 'ryanplugins_cwwlite_crypto' !== $order->get_payment_method() ) {
+			return;
+		}
+		if ( ! in_array( $order->get_status(), array( 'on-hold', 'pending' ), true ) ) {
+			return;
+		}
+		if ( ! is_user_logged_in() ) {
+			return;
+		}
+		if ( $order->get_customer_id() && $order->get_customer_id() !== get_current_user_id() ) {
+			return;
+		}
 
-        $pay_url       = $order->get_checkout_payment_url();
-        $network_label = $order->get_meta( '_cwwlite_network_label' ) ?: __( 'Crypto', 'crypto-wallet-payment-for-woocommerce-lite' );
-        ?>
-        <section class="cwwlite-retry-section">
-            <p class="cwwlite-retry-notice">
-                <?php printf(
-                    /* translators: %s: cryptocurrency network name e.g. Bitcoin (BTC) */
-                    esc_html__( 'This order is awaiting %s payment. If your previous payment failed or expired, you can retry without creating a new order.', 'crypto-wallet-payment-for-woocommerce-lite' ),
-                    esc_html( $network_label )
-                ); ?>
-            </p>
-            <a href="<?php echo esc_url( $pay_url ); ?>" class="button cwwlite-retry-btn">
-                <?php esc_html_e( 'Retry Payment', 'crypto-wallet-payment-for-woocommerce-lite' ); ?>
-            </a>
-        </section>
-        <?php
-    }
+		$pay_url       = $order->get_checkout_payment_url();
+		$network_label = $order->get_meta( '_cwwlite_network_label' ) ? $order->get_meta( '_cwwlite_network_label' ) : __( 'Crypto', 'crypto-wallet-payment-for-woocommerce-lite' );
+		?>
+		<section class="cwwlite-retry-section">
+			<p class="cwwlite-retry-notice">
+				<?php
+				printf(
+					/* translators: %s: cryptocurrency network name e.g. Bitcoin (BTC) */
+					esc_html__( 'This order is awaiting %s payment. If your previous payment failed or expired, you can retry without creating a new order.', 'crypto-wallet-payment-for-woocommerce-lite' ),
+					esc_html( $network_label )
+				);
+				?>
+			</p>
+			<a href="<?php echo esc_url( $pay_url ); ?>" class="button cwwlite-retry-btn">
+				<?php esc_html_e( 'Retry Payment', 'crypto-wallet-payment-for-woocommerce-lite' ); ?>
+			</a>
+		</section>
+		<?php
+	}
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // TX ID update form
-    // ─────────────────────────────────────────────────────────────────────────
+	// ─────────────────────────────────────────────────────────────────────────
+	// TX ID update form.
+	// ─────────────────────────────────────────────────────────────────────────
 
-    public function txid_update_form( $order ) {
-        if ( $order->get_payment_method() !== 'ryanplugins_cwwlite_crypto' ) return;
-        if ( ! in_array( $order->get_status(), [ 'on-hold', 'pending' ], true ) ) return;
+	/**
+	 * Render the TX ID update form in My Account order detail.
+	 *
+	 * @param WC_Order $order The order object.
+	 */
+	public function txid_update_form( $order ) {
+		if ( 'ryanplugins_cwwlite_crypto' !== $order->get_payment_method() ) {
+			return;
+		}
+		if ( ! in_array( $order->get_status(), array( 'on-hold', 'pending' ), true ) ) {
+			return;
+		}
 
-        $existing_txid = $order->get_meta( '_cwwlite_txid' );
-        $network_label = $order->get_meta( '_cwwlite_network_label' );
-        $wallet        = $order->get_meta( '_cwwlite_wallet' );
-        $amount        = $order->get_meta( '_cwwlite_crypto_amount' );
-        $symbol        = $order->get_meta( '_cwwlite_symbol' );
-        ?>
-        <section class="cwwlite-txid-update">
-            <h2><?php esc_html_e( 'Submit Transaction ID', 'crypto-wallet-payment-for-woocommerce-lite' ); ?></h2>
-            <p><?php printf(
-                /* translators: %s: cryptocurrency network name e.g. Bitcoin (BTC) */
-                esc_html__( 'Please send your %s payment to the address below, then paste the transaction hash here.', 'crypto-wallet-payment-for-woocommerce-lite' ),
-                esc_html( $network_label )
-            ); ?></p>
+		$existing_txid = $order->get_meta( '_cwwlite_txid' );
+		$network_label = $order->get_meta( '_cwwlite_network_label' );
+		$wallet        = $order->get_meta( '_cwwlite_wallet' );
+		$amount        = $order->get_meta( '_cwwlite_crypto_amount' );
+		$symbol        = $order->get_meta( '_cwwlite_symbol' );
+		?>
+		<section class="cwwlite-txid-update">
+			<h2><?php esc_html_e( 'Submit Transaction ID', 'crypto-wallet-payment-for-woocommerce-lite' ); ?></h2>
+			<p>
+			<?php
+			printf(
+				/* translators: %s: cryptocurrency network name e.g. Bitcoin (BTC) */
+				esc_html__( 'Please send your %s payment to the address below, then paste the transaction hash here.', 'crypto-wallet-payment-for-woocommerce-lite' ),
+				esc_html( $network_label )
+			);
+			?>
+			</p>
 
-            <p><strong><?php esc_html_e( 'Send To:', 'crypto-wallet-payment-for-woocommerce-lite' ); ?></strong><br>
-               <code><?php echo esc_html( $wallet ); ?></code></p>
+			<p><strong><?php esc_html_e( 'Send To:', 'crypto-wallet-payment-for-woocommerce-lite' ); ?></strong><br>
+				<code><?php echo esc_html( $wallet ); ?></code></p>
 
-            <?php if ( $amount ) : ?>
-            <p><strong><?php esc_html_e( 'Amount:', 'crypto-wallet-payment-for-woocommerce-lite' ); ?></strong>
-               <?php echo esc_html( $amount . ' ' . $symbol ); ?></p>
-            <?php endif; ?>
+			<?php if ( $amount ) : ?>
+			<p><strong><?php esc_html_e( 'Amount:', 'crypto-wallet-payment-for-woocommerce-lite' ); ?></strong>
+				<?php echo esc_html( $amount . ' ' . $symbol ); ?></p>
+			<?php endif; ?>
 
-            <form method="post" action="">
-                <?php wp_nonce_field( 'cwwlite_submit_txid_' . $order->get_id(), 'cwwlite_txid_nonce' ); ?>
-                <input type="hidden" name="cwwlite_order_id" value="<?php echo esc_attr( $order->get_id() ); ?>" />
+			<form method="post" action="">
+				<?php wp_nonce_field( 'cwwlite_submit_txid_' . $order->get_id(), 'cwwlite_txid_nonce' ); ?>
+				<input type="hidden" name="cwwlite_order_id" value="<?php echo esc_attr( $order->get_id() ); ?>" />
 
-                <p>
-                    <label for="cwwlite_txid_input"><strong><?php esc_html_e( 'Transaction ID / Hash:', 'crypto-wallet-payment-for-woocommerce-lite' ); ?></strong></label><br>
-                    <input type="text"
-                           id="cwwlite_txid_input"
-                           name="cwwlite_txid_value"
-                           value="<?php echo esc_attr( $existing_txid ); ?>"
-                           placeholder="<?php esc_attr_e( 'Paste your TX hash here', 'crypto-wallet-payment-for-woocommerce-lite' ); ?>"
-                           style="width:100%;max-width:500px;" />
-                </p>
-                <p>
-                    <button type="submit" class="button" name="cwwlite_submit_txid">
-                        <?php esc_html_e( 'Submit Transaction ID', 'crypto-wallet-payment-for-woocommerce-lite' ); ?>
-                    </button>
-                </p>
-            </form>
-        </section>
-        <?php
-    }
+				<p>
+					<label for="cwwlite_txid_input"><strong><?php esc_html_e( 'Transaction ID / Hash:', 'crypto-wallet-payment-for-woocommerce-lite' ); ?></strong></label><br>
+					<input type="text"
+							id="cwwlite_txid_input"
+							name="cwwlite_txid_value"
+							value="<?php echo esc_attr( $existing_txid ); ?>"
+							placeholder="<?php esc_attr_e( 'Paste your TX hash here', 'crypto-wallet-payment-for-woocommerce-lite' ); ?>"
+							style="width:100%;max-width:500px;" />
+				</p>
+				<p>
+					<button type="submit" class="button" name="cwwlite_submit_txid">
+						<?php esc_html_e( 'Submit Transaction ID', 'crypto-wallet-payment-for-woocommerce-lite' ); ?>
+					</button>
+				</p>
+			</form>
+		</section>
+		<?php
+	}
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // Handle TX ID form submission
-    // ─────────────────────────────────────────────────────────────────────────
+	// ─────────────────────────────────────────────────────────────────────────
+	// Handle TX ID form submission.
+	// ─────────────────────────────────────────────────────────────────────────
 
-    public function handle_txid_submission() {
-        if ( ! isset( $_POST['cwwlite_submit_txid'] ) ) return;
+	/**
+	 * Handle the TX ID form submission from My Account.
+	 */
+	public function handle_txid_submission() {
+		if ( ! isset( $_POST['cwwlite_submit_txid'] ) ) {
+			return;
+		}
 
-        $order_id = absint( $_POST['cwwlite_order_id'] ?? 0 );
-        if ( ! $order_id ) return;
+		$order_id = absint( $_POST['cwwlite_order_id'] ?? 0 );
+		if ( ! $order_id ) {
+			return;
+		}
 
-        if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['cwwlite_txid_nonce'] ?? '' ) ), 'cwwlite_submit_txid_' . $order_id ) ) {
-            wc_add_notice( __( 'Security check failed. Please try again.', 'crypto-wallet-payment-for-woocommerce-lite' ), 'error' );
-            return;
-        }
+		if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['cwwlite_txid_nonce'] ?? '' ) ), 'cwwlite_submit_txid_' . $order_id ) ) {
+			wc_add_notice( __( 'Security check failed. Please try again.', 'crypto-wallet-payment-for-woocommerce-lite' ), 'error' );
+			return;
+		}
 
-        $order = wc_get_order( $order_id );
-        if ( ! $order || $order->get_payment_method() !== 'ryanplugins_cwwlite_crypto' ) return;
-        if ( ! in_array( $order->get_status(), [ 'on-hold', 'pending' ], true ) ) return;
+		$order = wc_get_order( $order_id );
+		if ( ! $order || 'ryanplugins_cwwlite_crypto' !== $order->get_payment_method() ) {
+			return;
+		}
+		if ( ! in_array( $order->get_status(), array( 'on-hold', 'pending' ), true ) ) {
+			return;
+		}
 
-        // Ownership check
-        if ( is_user_logged_in() ) {
-            if ( $order->get_customer_id() && $order->get_customer_id() !== get_current_user_id() ) {
-                wc_add_notice( __( 'You are not allowed to update this order.', 'crypto-wallet-payment-for-woocommerce-lite' ), 'error' );
-                return;
-            }
-        } else {
-            $billing_email = $order->get_billing_email();
-            if ( $billing_email ) {
-                // Allow unauthenticated if they are coming from the order-received page (loose check).
-            }
-        }
+		// Ownership check.
+		if ( is_user_logged_in() ) {
+			if ( $order->get_customer_id() && $order->get_customer_id() !== get_current_user_id() ) {
+				wc_add_notice( __( 'You are not allowed to update this order.', 'crypto-wallet-payment-for-woocommerce-lite' ), 'error' );
+				return;
+			}
+		} else {
+			$billing_email = $order->get_billing_email();
+			// Allow unauthenticated guests arriving from the order-received page.
+		}
 
-$txid = sanitize_text_field( wp_unslash( $_POST['cwwlite_txid_value'] ?? '' ) );
-        if ( empty( $txid ) ) {
-            wc_add_notice( __( 'Please enter a transaction ID.', 'crypto-wallet-payment-for-woocommerce-lite' ), 'error' );
-            return;
-        }
-        if ( strlen( $txid ) < 10 || strlen( $txid ) > 200 || ! preg_match( '/^[a-zA-Z0-9]+$/', $txid ) ) {
-            wc_add_notice( __( 'The transaction ID looks invalid. Please double-check it.', 'crypto-wallet-payment-for-woocommerce-lite' ), 'error' );
-            return;
-        }
+		$txid = sanitize_text_field( wp_unslash( $_POST['cwwlite_txid_value'] ?? '' ) );
+		if ( empty( $txid ) ) {
+			wc_add_notice( __( 'Please enter a transaction ID.', 'crypto-wallet-payment-for-woocommerce-lite' ), 'error' );
+			return;
+		}
+		if ( strlen( $txid ) < 10 || strlen( $txid ) > 200 || ! preg_match( '/^[a-zA-Z0-9]+$/', $txid ) ) {
+			wc_add_notice( __( 'The transaction ID looks invalid. Please double-check it.', 'crypto-wallet-payment-for-woocommerce-lite' ), 'error' );
+			return;
+		}
 
-        $order->update_meta_data( '_cwwlite_txid', $txid );
-        $order->add_order_note( sprintf(
-            /* translators: %s: blockchain transaction hash/ID */
-            __( 'Customer submitted TX ID: %s', 'crypto-wallet-payment-for-woocommerce-lite' ),
-            $txid
-        ) );
-        $order->save();
+		$order->update_meta_data( '_cwwlite_txid', $txid );
+		$order->add_order_note(
+			sprintf(
+			/* translators: %s: blockchain transaction hash/ID */
+				__( 'Customer submitted TX ID: %s', 'crypto-wallet-payment-for-woocommerce-lite' ),
+				$txid
+			)
+		);
+		$order->save();
 
-        wc_add_notice( __( 'Thank you! Your transaction ID has been submitted. We will verify and update your order shortly.', 'crypto-wallet-payment-for-woocommerce-lite' ), 'success' );
-    }
+		wc_add_notice( __( 'Thank you! Your transaction ID has been submitted. We will verify and update your order shortly.', 'crypto-wallet-payment-for-woocommerce-lite' ), 'success' );
+	}
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // Add TX ID row to order totals table
-    // ─────────────────────────────────────────────────────────────────────────
+	// ─────────────────────────────────────────────────────────────────────────
+	// Add TX ID row to order totals table.
+	// ─────────────────────────────────────────────────────────────────────────
 
-    public function add_txid_to_order_table( $total_rows, $order ): array {
-        if ( $order->get_payment_method() !== 'ryanplugins_cwwlite_crypto' ) return $total_rows;
+	/**
+	 * Add TX ID and crypto amount rows to the order totals table.
+	 *
+	 * @param array    $total_rows Existing total rows.
+	 * @param WC_Order $order      The order object.
+	 * @return array
+	 */
+	public function add_txid_to_order_table( $total_rows, $order ): array {
+		if ( 'ryanplugins_cwwlite_crypto' !== $order->get_payment_method() ) {
+			return $total_rows;
+		}
 
-        $txid    = $order->get_meta( '_cwwlite_txid' );
-        $network = $order->get_meta( '_cwwlite_network' );
-        $amount  = $order->get_meta( '_cwwlite_crypto_amount' );
-        $symbol  = $order->get_meta( '_cwwlite_symbol' );
-        $cfg         = RyanPlugins_CWWLITE_Gateway::$networks[ $network ] ?? [];
-        $environment = $order->get_meta( '_cwwlite_environment' ) ?: 'mainnet';
-        $explorer    = $environment === 'testnet'
-            ? ( $cfg['explorer_testnet'] ?? $cfg['explorer'] ?? '' )
-            : ( $cfg['explorer'] ?? '' );
+		$txid        = $order->get_meta( '_cwwlite_txid' );
+		$network     = $order->get_meta( '_cwwlite_network' );
+		$amount      = $order->get_meta( '_cwwlite_crypto_amount' );
+		$symbol      = $order->get_meta( '_cwwlite_symbol' );
+		$cfg         = RyanPlugins_CWWLITE_Gateway::$networks[ $network ] ?? array();
+		$environment = $order->get_meta( '_cwwlite_environment' ) ? $order->get_meta( '_cwwlite_environment' ) : 'mainnet';
+		$explorer    = 'testnet' === $environment
+			? ( $cfg['explorer_testnet'] ?? $cfg['explorer'] ?? '' )
+			: ( $cfg['explorer'] ?? '' );
 
-        if ( $amount && $symbol ) {
-            $total_rows['cwwlite_crypto_amount'] = [
-                'label' => __( 'Crypto Amount:', 'crypto-wallet-payment-for-woocommerce-lite' ),
-                'value' => esc_html( $amount . ' ' . $symbol ),
-            ];
-        }
+		if ( $amount && $symbol ) {
+			$total_rows['cwwlite_crypto_amount'] = array(
+				'label' => __( 'Crypto Amount:', 'crypto-wallet-payment-for-woocommerce-lite' ),
+				'value' => esc_html( $amount . ' ' . $symbol ),
+			);
+		}
 
-        if ( $txid ) {
-            $tx_display = $explorer
-                ? '<a href="' . esc_url( ryanplugins_cwwlite_explorer_url( $explorer, $txid ) ) . '" target="_blank">' . esc_html( $txid ) . '</a>'
-                : esc_html( $txid );
+		if ( $txid ) {
+			$tx_display = $explorer
+				? '<a href="' . esc_url( ryanplugins_cwwlite_explorer_url( $explorer, $txid ) ) . '" target="_blank">' . esc_html( $txid ) . '</a>'
+				: esc_html( $txid );
 
-            $total_rows['cwwlite_txid'] = [
-                'label' => __( 'TX ID:', 'crypto-wallet-payment-for-woocommerce-lite' ),
-                'value' => $tx_display,
-            ];
-        }
+			$total_rows['cwwlite_txid'] = array(
+				'label' => __( 'TX ID:', 'crypto-wallet-payment-for-woocommerce-lite' ),
+				'value' => $tx_display,
+			);
+		}
 
-        return $total_rows;
-    }
+		return $total_rows;
+	}
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // Verification status notice
-    // ─────────────────────────────────────────────────────────────────────────
+	// ─────────────────────────────────────────────────────────────────────────
+	// Verification status notice.
+	// ─────────────────────────────────────────────────────────────────────────
 
-    public function verification_status_notice( $order ) {
-        if ( $order->get_payment_method() !== 'ryanplugins_cwwlite_crypto' ) return;
+	/**
+	 * Show a verification status notice on the My Account order detail page.
+	 *
+	 * @param WC_Order $order The order object.
+	 */
+	public function verification_status_notice( $order ) {
+		if ( 'ryanplugins_cwwlite_crypto' !== $order->get_payment_method() ) {
+			return;
+		}
 
-        $verified_by = $order->get_meta( '_cwwlite_verified_by' );
-        $status      = $order->get_status();
+		$verified_by = $order->get_meta( '_cwwlite_verified_by' );
+		$status      = $order->get_status();
 
-        if ( $verified_by === 'manual' && in_array( $status, [ 'processing', 'completed' ], true ) ) {
-            echo '<div class="woocommerce-info cwwlite-verified-notice">✅ '
-                . esc_html__( 'Your crypto payment has been manually verified.', 'crypto-wallet-payment-for-woocommerce-lite' )
-                . '</div>';
-        } elseif ( in_array( $status, [ 'on-hold', 'pending' ], true ) ) {
-            $txid = $order->get_meta( '_cwwlite_txid' );
-            if ( $txid ) {
-                echo '<div class="woocommerce-info cwwlite-pending-notice">⏳ '
-                    . esc_html__( 'Your transaction has been received and is awaiting manual verification by our team.', 'crypto-wallet-payment-for-woocommerce-lite' )
-                    . '</div>';
-            }
-        }
-    }
+		if ( 'manual' === $verified_by && in_array( $status, array( 'processing', 'completed' ), true ) ) {
+			echo '<div class="woocommerce-info cwwlite-verified-notice">✅ '
+				. esc_html__( 'Your crypto payment has been manually verified.', 'crypto-wallet-payment-for-woocommerce-lite' )
+				. '</div>';
+		} elseif ( in_array( $status, array( 'on-hold', 'pending' ), true ) ) {
+			$txid = $order->get_meta( '_cwwlite_txid' );
+			if ( $txid ) {
+				echo '<div class="woocommerce-info cwwlite-pending-notice">⏳ '
+					. esc_html__( 'Your transaction has been received and is awaiting manual verification by our team.', 'crypto-wallet-payment-for-woocommerce-lite' )
+					. '</div>';
+			}
+		}
+	}
 }
