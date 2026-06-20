@@ -4,7 +4,7 @@ Tags: cryptocurrency, bitcoin, woocommerce, payment gateway, ethereum
 Requires at least: 5.8
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -46,7 +46,7 @@ This plugin does not collect, store, or transmit any personal data beyond what W
 
 == Installation ==
 
-1. Upload the `crypto-wallet-payment-for-woocommerce-lite` folder to `/wp-content/plugins/`.
+1. Upload the `crypto-wallet-payment-for-woocommerce` folder to `/wp-content/plugins/`.
 2. Activate the plugin through the **Plugins → Installed Plugins** screen.
 3. Go to **WooCommerce → Settings → Payments → Crypto Wallet Payment** and enable the gateway.
 4. Enter your wallet address for each network you want to accept.
@@ -74,6 +74,12 @@ Yes. The plugin is fully compatible with WooCommerce High-Performance Order Stor
 
 == Changelog ==
 
+= 1.0.1 =
+* Fix: Corrected Text Domain to match plugin slug (`crypto-wallet-payment-for-woocommerce`) for proper i18n compatibility
+* Fix: Added `Requires Plugins: woocommerce` header for explicit WooCommerce dependency declaration
+* Fix: Removed 15 unused SVG asset files (arbitrum, bnb, metamask, phantom, polygon, solflare, sui, usdc, usdt, vespr, yoroi, near, lace, eternl, optimism) not referenced by any supported network
+* Fix: Added `index.php` silence files to all plugin subdirectories to prevent directory listing
+
 = 1.0.0 =
 * Initial release
 * Bitcoin, Ethereum, Solana, XRP support
@@ -83,6 +89,9 @@ Yes. The plugin is fully compatible with WooCommerce High-Performance Order Stor
 * HPOS compatibility
 
 == Upgrade Notice ==
+
+= 1.0.1 =
+WP.org compliance fixes: corrected text domain, added WooCommerce dependency header, removed unused assets, fixed tested-up-to version, and added directory listing protection. Recommended for all users.
 
 = 1.0.0 =
 Initial release.

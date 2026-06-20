@@ -3,24 +3,25 @@
  * Plugin Name:       Crypto Wallet Payment for WooCommerce
  * Plugin URI:        https://ryanplugins.net
  * Description:       Accept BTC, ETH, SOL and XRP payments in WooCommerce. Manual TX verification, live exchange rates via CoinGecko.
- * Version:           1.0.0
+ * Version:           1.0.1
  * Author:            RyanPlugins
  * Author URI:        https://profiles.wordpress.org/ryanplugins/
  * License:           GPL-2.0+
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain:       crypto-wallet-payment-for-woocommerce-lite
+ * Text Domain:       crypto-wallet-payment-for-woocommerce
  * Domain Path:       /languages
  * Requires at least: 5.8
  * Requires PHP:      7.4
  * WC requires at least: 6.0
  * WC tested up to:   10.6
+ * Requires Plugins:  woocommerce
  *
  * @package CWWLITE
  */
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'CWWLITE_VERSION', '1.0.0' );
+define( 'CWWLITE_VERSION', '1.0.1' );
 define( 'CWWLITE_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'CWWLITE_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 
@@ -163,7 +164,7 @@ add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), 'cwwlite_actio
  */
 function cwwlite_action_links( $links ) {
 	$settings_url = admin_url( 'admin.php?page=wc-settings&tab=checkout&section=cwwlite_crypto' );
-	array_unshift( $links, '<a href="' . esc_url( $settings_url ) . '">' . esc_html__( 'Settings', 'crypto-wallet-payment-for-woocommerce-lite' ) . '</a>' );
+	array_unshift( $links, '<a href="' . esc_url( $settings_url ) . '">' . esc_html__( 'Settings', 'crypto-wallet-payment-for-woocommerce' ) . '</a>' );
 	return $links;
 }
 

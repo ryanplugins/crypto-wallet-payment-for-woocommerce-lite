@@ -2,7 +2,7 @@
 
 ## Supported Versions
 
-The following versions of Crypto Wallet Payment for WooCommerce Lite are currently supported with security updates.
+The following versions of Crypto Wallet Payment for WooCommerce are currently supported with security updates.
 
 | Version | Supported          |
 | ------- | ------------------ |

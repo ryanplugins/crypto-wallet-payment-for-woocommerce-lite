@@ -84,7 +84,7 @@ class CWWLITE_Blocks extends AbstractPaymentMethodType {
 		}
 
 		return array(
-			'title'              => $this->settings['title'] ?? __( 'Pay with Crypto', 'crypto-wallet-payment-for-woocommerce-lite' ),
+			'title'              => $this->settings['title'] ?? __( 'Pay with Crypto', 'crypto-wallet-payment-for-woocommerce' ),
 			'description'        => $this->settings['description'] ?? '',
 			'exchange_rate_note' => $this->settings['exchange_rate_note'] ?? '',
 			'networks'           => $networks,
