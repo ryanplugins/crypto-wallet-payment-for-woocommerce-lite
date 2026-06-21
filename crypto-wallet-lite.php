@@ -172,7 +172,7 @@ function cwwlite_action_links( $links ) {
  * Show admin notice when WooCommerce is not active.
  */
 function cwwlite_missing_wc_notice() {
-	echo '<div class="error"><p><strong>Crypto Wallet Payment</strong> requires WooCommerce to be installed and active.</p></div>';
+	echo '<div class="error"><p><strong>' . esc_html__( 'Crypto Wallet Payment', 'crypto-wallet-payment-for-woocommerce' ) . '</strong> ' . esc_html__( 'requires WooCommerce to be installed and active.', 'crypto-wallet-payment-for-woocommerce' ) . '</p></div>';
 }
 
 // ── HPOS / Blocks compatibility declarations ──────────────────────────────────
