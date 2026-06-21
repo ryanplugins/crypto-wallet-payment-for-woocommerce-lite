@@ -76,7 +76,7 @@ class CWWLITE_Admin {
 			$label = $order->get_meta( '_cwwlite_network_label' );
 			echo $label
 				? '<span class="cwwlite-col-badge">' . esc_html( $label ) . '</span>'
-				: '—';
+				: esc_html( '—' );
 		}
 
 		if ( 'cwwlite_txid' === $column ) {

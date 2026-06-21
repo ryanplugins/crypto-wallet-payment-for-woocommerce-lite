@@ -50,24 +50,6 @@
         });
     });
 
-    // ── Upgrade notice — dismiss link + WP native X button ───────────────────
 
-    $(document).on('click', '#cwwlite-dismiss-notice, #cwwlite-upgrade-notice .notice-dismiss', function (e) {
-        e.preventDefault();
-
-        var $notice = $('#cwwlite-upgrade-notice');
-
-        $.ajax({
-            url:    admin.ajaxUrl,
-            method: 'POST',
-            data: {
-                action: 'cwwlite_dismiss_notice',
-                nonce:  admin.dismissNonce,
-            },
-        });
-
-        // Slide out immediately — don't wait for server
-        $notice.slideUp(200, function () { $notice.remove(); });
-    });
 
 }(jQuery));
