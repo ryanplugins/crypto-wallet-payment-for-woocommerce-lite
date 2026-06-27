@@ -165,6 +165,7 @@ add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), 'cwwlite_actio
 function cwwlite_action_links( $links ) {
 	$settings_url = admin_url( 'admin.php?page=wc-settings&tab=checkout&section=cwwlite_crypto' );
 	array_unshift( $links, '<a href="' . esc_url( $settings_url ) . '">' . esc_html__( 'Settings', 'crypto-wallet-payment-for-woocommerce' ) . '</a>' );
+	$links['go_pro'] = '<a href="' . esc_url( 'https://ryanplugins.net/crypto-wallet-payment-for-woocommerce-pro/' ) . '" target="_blank" rel="noopener noreferrer" style="color:#f59e0b;font-weight:700;">⚡ Go Pro</a>';
 	return $links;
 }
 
