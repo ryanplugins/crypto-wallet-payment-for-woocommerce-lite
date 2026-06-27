@@ -4,7 +4,7 @@ Tags: cryptocurrency, bitcoin, woocommerce, payment gateway, ethereum
 Requires at least: 5.8
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -110,6 +110,9 @@ Yes. Both Classic and Block Checkout are fully supported.
 Yes. The plugin is fully compatible with WooCommerce High-Performance Order Storage.
 
 == Changelog ==
+
+= 1.0.2 =
+* Add banners and icon assets
 
 = 1.0.1 =
 * Fix: Corrected Text Domain to match plugin slug (`crypto-wallet-payment-for-woocommerce`) for proper i18n compatibility
